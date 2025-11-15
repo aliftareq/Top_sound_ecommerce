@@ -4,7 +4,9 @@
   "description": "server for top_sound_Ecommerce",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "server.js",
+    "dev": "nodemon server.js"
   },
   "author": "alif",
   "license": "ISC",
