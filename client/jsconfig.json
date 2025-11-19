@@ -3,6 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "checkJs": false
+  },
+  "include": ["src"]
 }
+

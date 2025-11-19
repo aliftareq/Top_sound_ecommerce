@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-
 import cors from "cors";
 
 //create a db connection
