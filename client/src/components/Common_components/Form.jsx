@@ -118,7 +118,7 @@ const CommonForm = ({
           </div>
         ))}
       </div>
-      <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
+      <Button variant="outline" disabled={isBtnDisabled} type="submit" className="mt-2 w-full bg-slate-800 text-white">
         {buttonText || "Submit"}
       </Button>
     </form>
