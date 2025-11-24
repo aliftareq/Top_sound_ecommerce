@@ -75,9 +75,9 @@ const loginUser = async (req, res) => {
       success: true,
       message: "Logged in successfully",
       user: {
+        id: checkUser._id,
         email: checkUser.email,
         role: checkUser.role,
-        id: checkUser._id,
         userName: checkUser.userName,
       },
     });
