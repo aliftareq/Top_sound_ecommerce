@@ -105,7 +105,7 @@ const authMiddleware = async (req, res, next) => {
   if (!token)
     return res.status(401).json({
       success: false,
-      message: "Unauthorised user!",
+      message: "Unauthorized user!",
     });
 
   try {
@@ -115,7 +115,7 @@ const authMiddleware = async (req, res, next) => {
   } catch (error) {
     res.status(401).json({
       success: false,
-      message: "Unauthorised user!",
+      message: "Unauthorized user!",
     });
   }
 };
