@@ -3,7 +3,7 @@ import AdminSideBar from "./sidebar";
 import AdminHeader from "./header";
 import { useState } from "react";
 
-function AdminLayout() {
+const AdminLayout = () =>{
   const [openSidebar, setOpenSidebar] = useState(false);
 
   return (
@@ -14,7 +14,7 @@ function AdminLayout() {
       {/* admin content layout  */}
       <div className="flex flex-1 flex-col">
         <AdminHeader setOpen={setOpenSidebar} />
-        <main className="flex-1 flex-col flex bg-muted/40 p-4 md:p-6">
+        <main className="flex-1 flex-col flex bg-blue-50 p-4 md:p-6">
           <Outlet />
         </main>
       </div>
