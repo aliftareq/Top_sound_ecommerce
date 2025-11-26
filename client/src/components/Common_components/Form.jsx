@@ -55,10 +55,14 @@ const CommonForm = ({
             <SelectTrigger className="w-full">
               <SelectValue placeholder={getControlItem.label} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className=" bg-white text-slate-900 border border-slate-200 shadow-lg z-50">
               {getControlItem.options && getControlItem.options.length > 0
                 ? getControlItem.options.map((optionItem) => (
-                    <SelectItem key={optionItem.id} value={optionItem.id}>
+                    <SelectItem
+                      className="cursor-pointer hover:underline hover:bg-slate-100"
+                      key={optionItem.id}
+                      value={optionItem.id}
+                    >
                       {optionItem.label}
                     </SelectItem>
                   ))
@@ -106,7 +110,7 @@ const CommonForm = ({
     }
 
     return element;
-  }
+  };
 
   return (
     <form onSubmit={onSubmit}>
@@ -118,7 +122,12 @@ const CommonForm = ({
           </div>
         ))}
       </div>
-      <Button variant="outline" disabled={isBtnDisabled} type="submit" className="mt-2 w-full bg-slate-800 text-white">
+      <Button
+        variant="outline"
+        disabled={isBtnDisabled}
+        type="submit"
+        className="mt-2 w-full bg-slate-800 text-white"
+      >
         {buttonText || "Submit"}
       </Button>
     </form>
