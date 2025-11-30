@@ -6,6 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import ProductImageUpload from "../../components/Admin_components/image-upload.jsx";
 import { addProductFormElements } from "@/config";
 import { Fragment, useState } from "react";
 
@@ -25,6 +26,10 @@ const AdminProducts = () => {
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
     useState(false);
   const [formData, setFormData] = useState(initialFormData);
+  const [imageFile, setImageFile] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+  // const [imageLoadingState, setImageLoadingState] = useState(false);
+  // const [currentEditedId, setCurrentEditedId] = useState(null);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -67,15 +72,15 @@ const AdminProducts = () => {
               {/* {currentEditedId !== null ? "Edit Product" : "Add New Product"} */}
             </SheetTitle>
           </SheetHeader>
-          {/* <ProductImageUpload
-          imageFile={imageFile}
-          setImageFile={setImageFile}
-          uploadedImageUrl={uploadedImageUrl}
-          setUploadedImageUrl={setUploadedImageUrl}
-          setImageLoadingState={setImageLoadingState}
-          imageLoadingState={imageLoadingState}
-          isEditMode={currentEditedId !== null}
-          /> */}
+          <ProductImageUpload
+            imageFile={imageFile}
+            setImageFile={setImageFile}
+            uploadedImageUrl={uploadedImageUrl}
+            setUploadedImageUrl={setUploadedImageUrl}
+            // setImageLoadingState={setImageLoadingState}
+            // imageLoadingState={imageLoadingState}
+            // isEditMode={currentEditedId !== null}
+          />
           <div className="px-4 py-6">
             <CommonForm
               onSubmit={onSubmit}
