@@ -28,7 +28,7 @@ const AdminProducts = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-  // const [imageLoadingState, setImageLoadingState] = useState(false);
+  const [imageLoadingState, setImageLoadingState] = useState(false);
   // const [currentEditedId, setCurrentEditedId] = useState(null);
 
   const onSubmit = (event) => {
@@ -77,8 +77,8 @@ const AdminProducts = () => {
             setImageFile={setImageFile}
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
-            // setImageLoadingState={setImageLoadingState}
-            // imageLoadingState={imageLoadingState}
+            imageLoadingState={imageLoadingState}
+            setImageLoadingState={setImageLoadingState}
             // isEditMode={currentEditedId !== null}
           />
           <div className="px-4 py-6">

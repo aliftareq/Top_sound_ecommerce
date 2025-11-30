@@ -2,8 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import authRouter from "./routes/auth/auth-routes.js";
 import dotenv from "dotenv";
+import authRouter from "./routes/auth/auth-routes.js";
+import adminProductsRouter from "./routes/admin/products-routes.js";
 
 
 dotenv.config();
@@ -37,6 +38,7 @@ app.use(express.json());
 
 //all api endpoints
 app.use("/api/auth", authRouter);
+app.use("/api/admin/products", adminProductsRouter);
 
 //running server
 app.listen(PORT, () => console.log(`Server is runnig on port ${PORT}`));
