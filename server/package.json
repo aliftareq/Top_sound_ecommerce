@@ -4,6 +4,9 @@
   "description": "server for top_sound_Ecommerce",
   "type": "module",
   "main": "server.js",
+  "imports": {
+    "#models/*": "./models/*.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
