@@ -1,15 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useRef } from "react";
+import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
+import axios from "axios";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
-import axios from "axios";
+import { Skeleton } from "../ui/skeleton";
 
 const productImageUpload = ({
   imageFile,
   setImageFile,
+  imageLoadingState,
   // uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,
@@ -62,7 +64,9 @@ const productImageUpload = ({
 
   return (
     <div className="w-full mt-4 max-w-md mx-auto">
-      <Label className="text-lg font-semibold m-2 block text-center">Upload Image</Label>
+      <Label className="text-lg font-semibold m-2 block text-center">
+        Upload Image
+      </Label>
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
@@ -83,10 +87,12 @@ const productImageUpload = ({
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
             <span>Drag & drop or click to upload image</span>
           </Label>
+        ) : imageLoadingState ? (
+          <Skeleton className="h-10 bg-gray-100" />
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <FileIcon className="w-8 h-8 text-primary mr-2 " />
+              <FileIcon className="w-8 text-primary mr-2 h-8" />
             </div>
             <p className="text-sm font-medium">{imageFile.name}</p>
             <Button
