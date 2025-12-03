@@ -123,10 +123,10 @@ const CommonForm = ({
         ))}
       </div>
       <Button
-        variant="outline"
+        variant="submit"
         disabled={isBtnDisabled}
         type="submit"
-        className="mt-2 w-full bg-slate-800 text-white"
+        className="mt-2 w-full"
       >
         {buttonText || "Submit"}
       </Button>
