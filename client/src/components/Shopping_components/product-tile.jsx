@@ -9,7 +9,7 @@ const ShoppingProductTile = ({
   handleAddtoCart,
 }) => {
   return (
-    <Card className="w-full max-w-sm mx-auto">
+    <Card className="w-full max-w-sm mx-auto overflow-hidden p-0">
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img
@@ -59,13 +59,14 @@ const ShoppingProductTile = ({
       </div>
       <CardFooter>
         {product?.totalStock === 0 ? (
-          <Button className="w-full opacity-60 cursor-not-allowed">
+          <Button  variant="submit" className="w-full opacity-60 cursor-not-allowed mb-4">
             Out Of Stock
           </Button>
         ) : (
           <Button
+           variant="submit"
             onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-            className="w-full"
+            className="w-full mb-4"
           >
             Add to cart
           </Button>
