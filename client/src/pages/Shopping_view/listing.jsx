@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/set-state-in-effect */
+
 import { useEffect, useState } from "react";
 import { ArrowUpDownIcon } from "lucide-react";
 import ProductFilter from "@/components/Shopping_components/filter";
@@ -14,8 +14,14 @@ import {
 import { sortOptions } from "@/config";
 import ShoppingProductTile from "@/components/Shopping_components/product-tile";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
+import {
+  fetchAllFilteredProducts,
+  fetchProductDetails,
+} from "@/store/shop/products-slice";
 import { useSearchParams } from "react-router-dom";
+import ProductDetailsDialog from "@/components/Shopping_components/product-details";
+import { toast } from "sonner";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 
 const createSearchParamsHelper = (filterParams) => {
   const queryParams = [];
@@ -34,10 +40,16 @@ const createSearchParamsHelper = (filterParams) => {
 const ShoppingListing = () => {
   //states & hooks
   const dispatch = useDispatch();
-  const { productList } = useSelector((state) => state.shopProducts);
+  const { productList, productDetails } = useSelector(
+    (state) => state.shopProducts
+  );
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { user } = useSelector((state) => state.auth);
+
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const categorySearchParam = searchParams.get("category");
 
@@ -68,6 +80,45 @@ const ShoppingListing = () => {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   };
 
+  const handleGetProductDetails = (getCurrentProductId) => {
+    console.log(getCurrentProductId);
+    dispatch(fetchProductDetails(getCurrentProductId));
+  };
+
+  const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
+    // console.log(cartItems);
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast.error(
+            `Only ${getQuantity} quantity can be added for this item`
+          );
+
+          return;
+        }
+      }
+    }
+
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast.success("Product is added to cart");
+      }
+    });
+  };
+
   //rendering effects
   useEffect(() => {
     setSort("price-lowtohigh");
@@ -87,6 +138,10 @@ const ShoppingListing = () => {
       setSearchParams(new URLSearchParams(createQueryString));
     }
   }, [filters]);
+
+  useEffect(() => {
+    if (productDetails !== null) setOpenDetailsDialog(true);
+  }, [productDetails]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
@@ -129,14 +184,19 @@ const ShoppingListing = () => {
           {productList && productList.length > 0
             ? productList.map((productItem) => (
                 <ShoppingProductTile
-                  // handleGetProductDetails={handleGetProductDetails}
+                  handleGetProductDetails={handleGetProductDetails}
                   product={productItem}
-                  // handleAddtoCart={handleAddtoCart}
+                  handleAddtoCart={handleAddtoCart}
                 />
               ))
             : null}
         </div>
       </div>
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   );
 };
