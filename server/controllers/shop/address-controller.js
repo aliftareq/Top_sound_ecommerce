@@ -45,7 +45,7 @@ const fetchAllAddress = async (req, res) => {
       });
     }
 
-    const addressList = await find({ userId });
+    const addressList = await Address.find({ userId });
 
     res.status(200).json({
       success: true,
@@ -72,7 +72,7 @@ const editAddress = async (req, res) => {
       });
     }
 
-    const address = await findOneAndUpdate(
+    const address = await Address.findOneAndUpdate(
       {
         _id: addressId,
         userId,
@@ -111,7 +111,7 @@ const deleteAddress = async (req, res) => {
       });
     }
 
-    const address = await findOneAndDelete({ _id: addressId, userId });
+    const address = await Address.findOneAndDelete({ _id: addressId, userId });
 
     if (!address) {
       return res.status(404).json({
