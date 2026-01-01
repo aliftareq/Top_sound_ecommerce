@@ -17,7 +17,7 @@ const ShoppingCheckout = () => {
   const [isPaymentStart, setIsPaymemntStart] = useState(false);
   const dispatch = useDispatch();
 
-  // console.log(currentSelectedAddress, "cartItems");
+  console.log(cartItems, "cartItems");
 
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
@@ -32,10 +32,9 @@ const ShoppingCheckout = () => {
         )
       : 0;
 
-  const handleInitiatePaypalPayment=() =>{
-    if (cartItems.length === 0) {
+  const handleInitiatePaypalPayment = () => {
+    if (cartItems?.items?.length === 0) {
       toast.error("Your cart is empty. Please add items to proceed");
-
       return;
     }
     if (currentSelectedAddress === null) {
@@ -82,7 +81,7 @@ const ShoppingCheckout = () => {
         setIsPaymemntStart(false);
       }
     });
-  }
+  };
 
   if (approvalURL) {
     window.location.href = approvalURL;
@@ -111,7 +110,11 @@ const ShoppingCheckout = () => {
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button variant="submit" onClick={handleInitiatePaypalPayment} className="w-full">
+            <Button
+              variant="submit"
+              onClick={handleInitiatePaypalPayment}
+              className="w-full"
+            >
               {isPaymentStart
                 ? "Processing Paypal Payment..."
                 : "Checkout with Paypal"}

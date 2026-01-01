@@ -7,10 +7,9 @@ import authRouter from "./routes/auth/auth-routes.js";
 import adminProductsRouter from "./routes/admin/products-routes.js";
 
 import shopProductsRouter from "./routes/shop/products-routes.js";
-import shopCartRouter  from "./routes/shop/cart-routes.js";
-import shopAddressRouter   from "./routes/shop/address-routes.js";
-import shopOrderRouter   from "./routes/shop/order-routes.js";
-
+import shopCartRouter from "./routes/shop/cart-routes.js";
+import shopAddressRouter from "./routes/shop/address-routes.js";
+import shopOrderRouter from "./routes/shop/order-routes.js";
 
 dotenv.config();
 
