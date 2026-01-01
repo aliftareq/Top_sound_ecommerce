@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 import Address from "@/components/Shopping_components/address";
 import img from "../../assets/account.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,12 +12,12 @@ import { toast } from "sonner";
 const ShoppingCheckout = () => {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  // const { approvalURL } = useSelector((state) => state.shopOrder);
+  const { approvalURL } = useSelector((state) => state.shopOrder);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
   const [isPaymentStart, setIsPaymemntStart] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(currentSelectedAddress, "cartItems");
+  // console.log(currentSelectedAddress, "cartItems");
 
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
@@ -31,7 +32,7 @@ const ShoppingCheckout = () => {
         )
       : 0;
 
-  function handleInitiatePaypalPayment() {
+  const handleInitiatePaypalPayment=() =>{
     if (cartItems.length === 0) {
       toast.error("Your cart is empty. Please add items to proceed");
 
@@ -83,9 +84,9 @@ const ShoppingCheckout = () => {
     });
   }
 
-  // if (approvalURL) {
-  //   window.location.href = approvalURL;
-  // }
+  if (approvalURL) {
+    window.location.href = approvalURL;
+  }
 
   return (
     <div className="flex flex-col">
