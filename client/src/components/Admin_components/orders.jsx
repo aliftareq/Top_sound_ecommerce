@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -10,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-// import AdminOrderDetailsView from "./order-details";
+import AdminOrderDetailsView from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllOrdersForAdmin,
@@ -19,24 +20,24 @@ import {
 } from "@/store/admin/order-slice";
 import { Badge } from "../ui/badge";
 
-function AdminOrdersView() {
+const AdminOrdersView=() =>{
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
-//   function handleFetchOrderDetails(getId) {
-//     dispatch(getOrderDetailsForAdmin(getId));
-//   }
+  const handleFetchOrderDetails=(getId) =>{
+    dispatch(getOrderDetailsForAdmin(getId));
+  }
 
-//   useEffect(() => {
-//     dispatch(getAllOrdersForAdmin());
-//   }, [dispatch]);
+  useEffect(() => {
+    dispatch(getAllOrdersForAdmin());
+  }, [dispatch]);
 
   console.log(orderDetails, "orderList");
 
-//   useEffect(() => {
-//     if (orderDetails !== null) setOpenDetailsDialog(true);
-//   }, [orderDetails]);
+  useEffect(() => {
+    if (orderDetails !== null) setOpenDetailsDialog(true);
+  }, [orderDetails]);
 
   return (
     <Card>
@@ -81,13 +82,13 @@ function AdminOrdersView() {
                         open={openDetailsDialog}
                         onOpenChange={() => {
                           setOpenDetailsDialog(false);
-                        //   dispatch(resetOrderDetails());
+                          dispatch(resetOrderDetails());
                         }}
                       >
                         <Button
-                        //   onClick={() =>
-                        //     handleFetchOrderDetails(orderItem?._id)
-                        //   }
+                          onClick={() =>
+                            handleFetchOrderDetails(orderItem?._id)
+                          }
                         >
                           View Details
                         </Button>

@@ -13,7 +13,7 @@ const store = configureStore({
     auth: authReducer,
 
     adminProducts: adminProductsSlice,
-     adminOrder: adminOrderSlice,
+    adminOrder: adminOrderSlice,
 
     shopProducts: shopProductsSlice,
     shopCart: shopCartSlice,
