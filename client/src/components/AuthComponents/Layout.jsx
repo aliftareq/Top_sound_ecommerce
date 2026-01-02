@@ -6,7 +6,7 @@ function AuthLayout() {
       <div className="hidden lg:flex items-center justify-center bg-slate-800 w-2/5 px-12">
         <div className="max-w-md space-y-6 text-center text-primary-foreground">
           <h1 className="text-4xl text-white font-extrabold tracking-tight">
-            Welcome to Ecommerce Shopping
+            Welcome to Top Sound Technology Shopping
           </h1>
         </div>
       </div>
