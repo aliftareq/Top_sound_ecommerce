@@ -4,7 +4,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth/auth-routes.js";
+
 import adminProductsRouter from "./routes/admin/products-routes.js";
+import adminOrderRouter from "./routes/admin/order-routes.js";
 
 import shopProductsRouter from "./routes/shop/products-routes.js";
 import shopCartRouter from "./routes/shop/cart-routes.js";
@@ -41,9 +43,15 @@ app.use(cookieParser());
 app.use(express.json());
 
 //all api endpoints
-app.use("/api/auth", authRouter);
-app.use("/api/admin/products", adminProductsRouter);
 
+//auth routes
+app.use("/api/auth", authRouter);
+
+//admin-routes
+app.use("/api/admin/products", adminProductsRouter);
+app.use("/api/admin/orders", adminOrderRouter);
+
+//shop-routes
 app.use("/api/shop/products", shopProductsRouter);
 app.use("/api/shop/cart", shopCartRouter);
 app.use("/api/shop/address", shopAddressRouter);
