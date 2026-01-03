@@ -97,9 +97,8 @@ const ShoppingListing = () => {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
           toast.error(
-            `Only ${getQuantity} quantity can be added for this item`
+            `Only ${getQuantity} items available in the stock`
           );
-
           return;
         }
       }

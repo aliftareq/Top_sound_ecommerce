@@ -7,16 +7,14 @@ import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-// import { setProductDetails } from "@/store/shop/products-slice";
+import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
 // import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
 // import { addReview, getReviews } from "@/store/shop/review-slice";
 import { toast } from "sonner";
-import { setProductDetails } from "@/store/shop/products-slice";
 
-
-const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
+const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   // const [reviewMsg, setReviewMsg] = useState("");
   // const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
@@ -24,13 +22,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
   const { cartItems } = useSelector((state) => state.shopCart);
   // const { reviews } = useSelector((state) => state.shopReview);
 
-//   const handleRatingChange=(getRating) =>{
-//     console.log(getRating, "getRating");
+  //   const handleRatingChange=(getRating) =>{
+  //     console.log(getRating, "getRating");
 
-//     setRating(getRating);
-//   }
+  //     setRating(getRating);
+  //   }
 
-  const handleAddToCart=(getCurrentProductId, getTotalStock) =>{
+  const handleAddToCart = (getCurrentProductId, getTotalStock) => {
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -40,7 +38,9 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
-            toast.success(`Only ${getQuantity} quantity can be added for this item`);
+          toast.error(
+            `Only ${getQuantity} items available in the stock`
+          );
           return;
         }
       }
@@ -55,17 +55,16 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast.success("Product is added to cart successfully");
-        
       }
     });
-  }
+  };
 
-  const handleDialogClose=() =>{
+  const handleDialogClose = () => {
     setOpen(false);
     dispatch(setProductDetails());
     // setRating(0);
     // setReviewMsg("");
-  }
+  };
 
   // const handleAddReview=() =>{
   //   dispatch(
@@ -99,9 +98,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
   //     : 0;
 
   return (
-    <Dialog open={open} 
-    onOpenChange={handleDialogClose}
-    >
+    <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
         <div className="relative overflow-hidden rounded-lg">
           <img
@@ -143,12 +140,12 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
           </div>
           <div className="mt-5 mb-5">
             {productDetails?.totalStock === 0 ? (
-              <Button className="w-full opacity-60 cursor-not-allowed">
+              <Button variant="submit" className="w-full opacity-60 cursor-not-allowed">
                 Out of Stock
               </Button>
             ) : (
               <Button
-              variant="submit"
+                variant="submit"
                 className="w-full"
                 onClick={() =>
                   handleAddToCart(
@@ -164,9 +161,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
           <Separator />
           <div className="max-h-[300px] overflow-auto">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
-            <div className="grid gap-6">
-              //review part
-            </div>
+            <div className="grid gap-6">//review part</div>
             <div className="mt-10 flex-col flex gap-2">
               <Label>Write a review</Label>
               <div className="flex gap-1">
@@ -182,8 +177,8 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
                 placeholder="Write a review..."
               />
               <Button
-                // onClick={handleAddReview}
-                // disabled={reviewMsg.trim() === ""}
+              // onClick={handleAddReview}
+              // disabled={reviewMsg.trim() === ""}
               >
                 Submit
               </Button>
@@ -193,6 +188,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) =>{
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default ProductDetailsDialog;

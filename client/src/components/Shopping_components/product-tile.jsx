@@ -22,12 +22,12 @@ const ShoppingProductTile = ({
               Out Of Stock
             </Badge>
           ) : product?.totalStock < 10 ? (
-            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+            <Badge className="absolute top-2 left-2 bg-yellow-500 hover:bg-yellow-500">
               {`Only ${product?.totalStock} items left`}
             </Badge>
           ) : product?.salePrice > 0 ? (
-            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-              Sale
+            <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
+              On Sale
             </Badge>
           ) : null}
         </div>
