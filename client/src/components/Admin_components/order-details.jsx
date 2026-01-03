@@ -22,7 +22,7 @@ function AdminOrderDetailsView({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  console.log(orderDetails, "orderDetailsorderDetails");
+  console.log(orderDetails, "orderDetails");
 
   function handleUpdateStatus(event) {
     event.preventDefault();
