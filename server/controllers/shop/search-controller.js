@@ -36,4 +36,4 @@ const searchProducts = async (req, res) => {
   }
 };
 
-export default { searchProducts };
+export { searchProducts };
