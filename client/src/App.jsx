@@ -38,6 +38,9 @@ function App() {
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
+        {/* main route */}
+        <Route path="/" element={<ShoppingHome />} />
+        {/* <Route path="/shop/listing" element={<ShoppingListing />} /> */}
         {/* auth routes  */}
         <Route
           path="/auth"
