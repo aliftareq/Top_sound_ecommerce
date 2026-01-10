@@ -39,7 +39,11 @@ function App() {
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         {/* main route */}
-        <Route path="/" element={<ShoppingHome />} />
+        <Route path="/" element={<ShoppingLayout />}>
+          <Route path="/" element={<ShoppingHome />} />
+          <Route path="listing" element={<ShoppingListing />} />
+          <Route path="search" element={<SearchProducts />} />
+        </Route>
         {/* <Route path="/shop/listing" element={<ShoppingListing />} /> */}
         {/* auth routes  */}
         <Route
@@ -76,13 +80,10 @@ function App() {
             </CheckAuth>
           }
         >
-          <Route path="home" element={<ShoppingHome />} />
-          <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="search" element={<SearchProducts />} />
         </Route>
         {/* not found page  */}
         <Route path="*" element={<NotFoundPage />}></Route>
