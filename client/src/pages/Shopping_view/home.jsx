@@ -1,8 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { Button } from "@/components/ui/button";
-import bannerOne from "../../assets/banner-1.jpg";
-import bannerTwo from "../../assets/banner-2.jpg";
-import bannerThree from "../../assets/banner-3.jpg";
 import {
   Airplay,
   BabyIcon,
@@ -27,7 +24,7 @@ import {
 } from "@/store/shop/products-slice";
 import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-// import { getFeatureImages } from "@/store/common-slice";
+import { getFeatureImages } from "@/store/common-slice";
 import { toast } from "sonner";
 import ShoppingProductTile from "@/components/Shopping_components/product-tile";
 import ProductDetailsDialog from "@/components/Shopping_components/product-details";
@@ -53,7 +50,7 @@ const ShoppingHome = () => {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
-  // const { featureImageList } = useSelector((state) => state.commonFeature);
+  const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
@@ -97,13 +94,13 @@ const ShoppingHome = () => {
     }
   }, [productDetails]);
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
-  //   }, 15000);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
+    }, 5000);
 
-  //   return () => clearInterval(timer);
-  // }, [featureImageList]);
+    return () => clearInterval(timer);
+  }, [featureImageList]);
 
   useEffect(() => {
     dispatch(
@@ -116,14 +113,14 @@ const ShoppingHome = () => {
 
   console.log(productList, "productList");
 
-  // useEffect(() => {
-  //   dispatch(getFeatureImages());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(getFeatureImages());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden">
-        {/* {featureImageList && featureImageList.length > 0
+        {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
               <img
                 src={slide?.image}
@@ -133,17 +130,17 @@ const ShoppingHome = () => {
                 } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
               />
             ))
-          : null} */}
+          : null}
         <Button
           variant="outline"
           size="icon"
-          // onClick={() =>
-          //   setCurrentSlide(
-          //     (prevSlide) =>
-          //       (prevSlide - 1 + featureImageList.length) %
-          //       featureImageList.length
-          //   )
-          // }
+          onClick={() =>
+            setCurrentSlide(
+              (prevSlide) =>
+                (prevSlide - 1 + featureImageList.length) %
+                featureImageList.length
+            )
+          }
           className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
         >
           <ChevronLeftIcon className="w-4 h-4" />
@@ -151,11 +148,11 @@ const ShoppingHome = () => {
         <Button
           variant="outline"
           size="icon"
-          // onClick={() =>
-          //   setCurrentSlide(
-          //     (prevSlide) => (prevSlide + 1) % featureImageList.length
-          //   )
-          // }
+          onClick={() =>
+            setCurrentSlide(
+              (prevSlide) => (prevSlide + 1) % featureImageList.length
+            )
+          }
           className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
         >
           <ChevronRightIcon className="w-4 h-4" />
