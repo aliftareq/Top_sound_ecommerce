@@ -74,11 +74,11 @@ const shoppingOrderSlice = createSlice({
       })
       .addCase(createNewOrder.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.approvalURL = action.payload.approvalURL;
-        state.orderId = action.payload.orderId;
+        state.approvalURL = action.payload.url;
+        state.orderId = action?.payload?.orderId;
         sessionStorage.setItem(
           "currentOrderId",
-          JSON.stringify(action.payload.orderId)
+          JSON.stringify(action?.payload?.orderId)
         );
       })
       .addCase(createNewOrder.rejected, (state) => {

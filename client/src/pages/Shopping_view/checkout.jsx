@@ -17,7 +17,8 @@ const ShoppingCheckout = () => {
   const [isPaymentStart, setIsPaymemntStart] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(cartItems, "cartItems");
+  // console.log(cartItems, "cartItems");
+  console.log(approvalURL)
 
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
@@ -64,7 +65,7 @@ const ShoppingCheckout = () => {
         notes: currentSelectedAddress?.notes,
       },
       orderStatus: "pending",
-      paymentMethod: "paypal",
+      paymentMethod: "SSLCommerz",
       paymentStatus: "pending",
       totalAmount: totalCartAmount,
       orderDate: new Date(),

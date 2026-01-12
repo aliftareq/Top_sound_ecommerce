@@ -1,7 +1,31 @@
+// @ts-nocheck
 import paypal from "../../helpers/paypal.js";
 import Order from "#models/Order";
 import Cart from "#models/Cart";
 import Product from "#models/Product";
+import mongoose from "mongoose";
+import SSLCommerzPayment from "sslcommerz-lts";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const store_id = process.env.SSL_STORE_ID;
+const store_passwd = process.env.SSL_STORE_PASS;
+const is_live = false;
+
+export const sslSuccess = (req, res) => {
+  // SSLCommerz sends data via POST usually, so you may need app.post
+  // for now just redirect frontend
+  return res.redirect("http://localhost:5173/shop/SSL-return");
+};
+
+export const sslFail = (req, res) => {
+  return res.redirect("http://localhost:5173/shop/payment-failed");
+};
+
+export const sslCancel = (req, res) => {
+  return res.redirect("http://localhost:5173/shop/payment-cancelled");
+};
 
 const createOrder = async (req, res) => {
   try {
@@ -20,71 +44,79 @@ const createOrder = async (req, res) => {
       cartId,
     } = req.body;
 
-    const create_payment_json = {
-      intent: "sale",
-      payer: {
-        payment_method: "paypal",
-      },
-      redirect_urls: {
-        return_url: "http://localhost:5173/shop/paypal-return",
-        cancel_url: "http://localhost:5173/shop/paypal-cancel",
-      },
-      transactions: [
-        {
-          item_list: {
-            items: cartItems.map((item) => ({
-              name: item.title,
-              sku: item.productId,
-              price: item.price.toFixed(2),
-              currency: "USD",
-              quantity: item.quantity,
-            })),
-          },
-          amount: {
-            currency: "USD",
-            total: totalAmount.toFixed(2),
-          },
-          description: "description",
-        },
-      ],
+    const newlyCreatedOrder = new Order({
+      userId,
+      cartId,
+      cartItems,
+      addressInfo,
+      orderStatus,
+      paymentMethod,
+      paymentStatus,
+      totalAmount,
+      orderDate,
+      orderUpdateDate,
+      paymentId,
+      payerId,
+    });
+
+    await newlyCreatedOrder.save();
+
+    // console.log(addressInfo);
+
+    const data = {
+      total_amount: totalAmount,
+      currency: "BDT",
+      tran_id: new mongoose.Types.ObjectId().toString(),
+      success_url: "http://localhost:5000/api/shop/order/ssl-success",
+      fail_url: "http://localhost:5000/api/shop/order/ssl-fail",
+      cancel_url: "http://localhost:5000/api/shop/order/ssl-cancel",
+      ipn_url: "http://localhost:3030/ipn",
+      shipping_method: "Courier",
+      product_name: "Computer.",
+      product_category: "Electronic",
+      product_profile: "general",
+      cus_name: "Customer Name",
+      cus_email: "customer@example.com",
+      cus_add1: addressInfo.address || "NULL",
+      cus_add2: addressInfo.address || "NULL",
+      cus_city: addressInfo.city || "NULL",
+      cus_state: addressInfo.city || "NULL",
+      cus_postcode: addressInfo.pincode || "1000",
+      cus_country: "Bangladesh",
+      cus_phone: addressInfo.phone || "NULL",
+      cus_fax: addressInfo.phone || "NULL",
+      ship_name: "Top_Sound",
+      ship_add1: "gulistan shopping complex",
+      ship_add2: "gulistan shopping complex",
+      ship_city: "Dhaka",
+      ship_state: "Dhaka",
+      ship_postcode: 1000,
+      ship_country: "Bangladesh",
     };
+    // console.log(data);
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
-    paypal.payment.create(create_payment_json, async (error, paymentInfo) => {
-      if (error) {
-        console.log(error);
+    const apiResponse = await sslcz.init(data);
 
-        return res.status(500).json({
-          success: false,
-          message: "Error while creating paypal payment",
-        });
-      } else {
-        const newlyCreatedOrder = new Order({
-          userId,
-          cartId,
-          cartItems,
-          addressInfo,
-          orderStatus,
-          paymentMethod,
-          paymentStatus,
-          totalAmount,
-          orderDate,
-          orderUpdateDate,
-          paymentId,
-          payerId,
-        });
+    const GatewayPageURL = apiResponse?.GatewayPageURL;
+    if (!GatewayPageURL) {
+      // mark failed
+      await Order.findByIdAndUpdate(newlyCreatedOrder._id, {
+        orderStatus: "FAILED",
+        paymentStatus: "FAILED",
+        orderUpdateDate: new Date(),
+      });
 
-        await newlyCreatedOrder.save();
+      return res.status(500).json({
+        success: false,
+        message: "No Gateway URL",
+      });
+    }
 
-        const approvalURL = paymentInfo.links.find(
-          (link) => link.rel === "approval_url"
-        ).href;
-
-        res.status(201).json({
-          success: true,
-          approvalURL,
-          orderId: newlyCreatedOrder._id,
-        });
-      }
+    return res.status(201).json({
+      success: true,
+      url: GatewayPageURL,
+      orderId: newlyCreatedOrder._id,
     });
   } catch (e) {
     console.log(e);
@@ -199,9 +231,4 @@ const getOrderDetails = async (req, res) => {
   }
 };
 
-export {
-  createOrder,
-  capturePayment,
-  getAllOrdersByUser,
-  getOrderDetails,
-};
+export { createOrder, capturePayment, getAllOrdersByUser, getOrderDetails };
