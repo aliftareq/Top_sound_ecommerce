@@ -41,8 +41,8 @@ function App() {
         {/* main route */}
         <Route path="/" element={<ShoppingLayout />}>
           <Route path="/" element={<ShoppingHome />} />
-          <Route path="listing" element={<ShoppingListing />} />
-          <Route path="search" element={<SearchProducts />} />
+          <Route path="/shop/listing" element={<ShoppingListing />} />
+          <Route path="/shop/search" element={<SearchProducts />} />
         </Route>
         {/* <Route path="/shop/listing" element={<ShoppingListing />} /> */}
         {/* auth routes  */}
