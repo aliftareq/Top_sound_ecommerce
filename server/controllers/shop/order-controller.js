@@ -1,5 +1,4 @@
 // @ts-nocheck
-import paypal from "../../helpers/paypal.js";
 import Order from "#models/Order";
 import Cart from "#models/Cart";
 import Product from "#models/Product";
@@ -14,8 +13,6 @@ const store_passwd = process.env.SSL_STORE_PASS;
 const is_live = false;
 
 export const sslSuccess = (req, res) => {
-  // SSLCommerz sends data via POST usually, so you may need app.post
-  // for now just redirect frontend
   return res.redirect("http://localhost:5173/shop/SSL-return");
 };
 
@@ -55,8 +52,6 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId,
-      payerId,
     });
 
     await newlyCreatedOrder.save();
@@ -142,8 +137,6 @@ const capturePayment = async (req, res) => {
 
     order.paymentStatus = "paid";
     order.orderStatus = "confirmed";
-    order.paymentId = paymentId;
-    order.payerId = payerId;
 
     for (let item of order.cartItems) {
       let product = await Product.findById(item.productId);

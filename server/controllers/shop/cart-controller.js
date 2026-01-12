@@ -1,5 +1,6 @@
 import Cart from "#models/Cart";
 import Product from "#models/Product";
+import mongoose from "mongoose";
 
 const addToCart = async (req, res) => {
   try {
@@ -18,6 +19,13 @@ const addToCart = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "Product not found",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId",
       });
     }
 
@@ -59,6 +67,13 @@ const fetchCartItems = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "User id is mandatory!",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId",
       });
     }
 
@@ -116,6 +131,13 @@ const updateCartItemQty = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Invalid data provided!",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId",
       });
     }
 
@@ -181,6 +203,13 @@ const deleteCartItem = async (req, res) => {
       });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId",
+      });
+    }
+
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
       select: "image title price salePrice",
@@ -229,9 +258,4 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
-export {
-  addToCart,
-  updateCartItemQty,
-  deleteCartItem,
-  fetchCartItems,
-};
+export { addToCart, updateCartItemQty, deleteCartItem, fetchCartItems };

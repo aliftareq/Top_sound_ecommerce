@@ -26,8 +26,6 @@ const OrderSchema = new Schema({
   totalAmount: Number,
   orderDate: Date,
   orderUpdateDate: Date,
-  paymentId: String,
-  payerId: String,
 });
 
 const Order = model("Order", OrderSchema);
