@@ -80,6 +80,7 @@ function App() {
             </CheckAuth>
           }
         >
+           <Route path="home" element={<ShoppingHome />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="SSL-return" element={<SSLReturnPage />} />
