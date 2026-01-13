@@ -89,6 +89,11 @@ const ShoppingListing = () => {
     // console.log(cartItems);
     let getCartItems = cartItems.items || [];
 
+    if (!user) {
+      toast.error("You must login First to Add Items!!!");
+      return;
+    }
+
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
         (item) => item.productId === getCurrentProductId

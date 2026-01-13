@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
-const SearchProducts=() =>{
+const SearchProducts = () => {
   const [keyword, setKeyword] = useState("");
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,9 +38,13 @@ const SearchProducts=() =>{
     }
   }, [keyword]);
 
-  const handleAddtoCart=(getCurrentProductId, getTotalStock) =>{
-    console.log(cartItems);
+  const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
     let getCartItems = cartItems.items || [];
+
+    if (!user) {
+      toast.error("You must login First to Add Items!!!");
+      return;
+    }
 
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
@@ -49,7 +53,9 @@ const SearchProducts=() =>{
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
-          toast.error( `Only ${getQuantity} items available right this moment!!!`);
+          toast.error(
+            `Only ${getQuantity} items available right this moment!!!`
+          );
           return;
         }
       }
@@ -64,15 +70,15 @@ const SearchProducts=() =>{
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast.success("Product is added to cart")
+        toast.success("Product is added to cart");
       }
     });
-  }
+  };
 
-  const handleGetProductDetails=(getCurrentProductId) =>{
+  const handleGetProductDetails = (getCurrentProductId) => {
     console.log(getCurrentProductId);
     dispatch(fetchProductDetails(getCurrentProductId));
-  }
+  };
 
   useEffect(() => {
     if (productDetails !== null) setOpenDetailsDialog(true);
@@ -112,6 +118,6 @@ const SearchProducts=() =>{
       />
     </div>
   );
-}
+};
 
 export default SearchProducts;

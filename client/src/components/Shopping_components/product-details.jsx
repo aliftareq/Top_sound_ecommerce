@@ -32,6 +32,11 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const handleAddToCart = (getCurrentProductId, getTotalStock) => {
     let getCartItems = cartItems.items || [];
 
+    if (!user) {
+      toast.error("You must login First to Add Items!!!");
+      return;
+    }
+
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
         (item) => item.productId === getCurrentProductId
