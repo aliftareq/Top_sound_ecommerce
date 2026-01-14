@@ -116,7 +116,7 @@ const ShoppingCheckout = () => {
             >
               {isPaymentStart
                 ? "Processing Paypal Payment..."
-                : "Checkout with Paypal"}
+                : "Pay with Bkash"}
             </Button>
           </div>
         </div>

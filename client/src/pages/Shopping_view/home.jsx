@@ -55,9 +55,9 @@ const ShoppingHome = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleNavigateToListingPage = (getCurrentItem, section) => {
     sessionStorage.removeItem("filters");
@@ -75,8 +75,8 @@ const ShoppingHome = () => {
 
   const handleAddtoCart = (getCurrentProductId) => {
     if (!user) {
-      toast.error("You must login First to Add Items!!!");
-      return;
+      toast.error("You must login first to add this item!!!");
+      navigate("/auth/login");
     }
     dispatch(
       addToCart({

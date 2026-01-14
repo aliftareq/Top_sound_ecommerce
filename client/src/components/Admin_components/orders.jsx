@@ -20,14 +20,14 @@ import {
 } from "@/store/admin/order-slice";
 import { Badge } from "../ui/badge";
 
-const AdminOrdersView=() =>{
+const AdminOrdersView = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
-  const handleFetchOrderDetails=(getId) =>{
+  const handleFetchOrderDetails = (getId) => {
     dispatch(getOrderDetailsForAdmin(getId));
-  }
+  };
 
   useEffect(() => {
     dispatch(getAllOrdersForAdmin());
@@ -65,7 +65,7 @@ const AdminOrdersView=() =>{
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
                       <Badge
-                        className={`py-1 px-3 ${
+                        className={`py-1 px-3 text-white ${
                           orderItem?.orderStatus === "confirmed"
                             ? "bg-green-500"
                             : orderItem?.orderStatus === "rejected"
@@ -86,6 +86,7 @@ const AdminOrdersView=() =>{
                         }}
                       >
                         <Button
+                          variant="submit"
                           onClick={() =>
                             handleFetchOrderDetails(orderItem?._id)
                           }
@@ -103,6 +104,6 @@ const AdminOrdersView=() =>{
       </CardContent>
     </Card>
   );
-}
+};
 
 export default AdminOrdersView;

@@ -18,7 +18,7 @@ import {
   fetchAllFilteredProducts,
   fetchProductDetails,
 } from "@/store/shop/products-slice";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 import { toast } from "sonner";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -50,6 +50,7 @@ const ShoppingListing = () => {
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const navigate = useNavigate();
 
   const categorySearchParam = searchParams.get("category");
 
@@ -86,13 +87,13 @@ const ShoppingListing = () => {
   };
 
   const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
-    // console.log(cartItems);
-    let getCartItems = cartItems.items || [];
 
     if (!user) {
-      toast.error("You must login First to Add Items!!!");
-      return;
+      toast.error("You must login first to add this item!!!");
+      navigate("/auth/login");
     }
+    
+    let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(

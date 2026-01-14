@@ -14,6 +14,7 @@ import StarRatingComponent from "../Common_components/star-rating";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -22,6 +23,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
+  const navigate = useNavigate();
 
   const handleRatingChange = (getRating) => {
     console.log(getRating, "getRating");
@@ -33,8 +35,8 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     let getCartItems = cartItems.items || [];
 
     if (!user) {
-      toast.error("You must login First to Add Items!!!");
-      return;
+      toast.error("You must login first to add this item!!!");
+      navigate("/auth/login");
     }
 
     if (getCartItems.length) {

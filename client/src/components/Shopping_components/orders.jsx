@@ -20,15 +20,15 @@ import {
 } from "@/store/shop/order-slice";
 import { Badge } from "../ui/badge";
 
-const ShoppingOrders=() =>{
+const ShoppingOrders = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { orderList, orderDetails } = useSelector((state) => state?.shopOrder);
 
-  const handleFetchOrderDetails=(getId) =>{
+  const handleFetchOrderDetails = (getId) => {
     dispatch(getOrderDetails(getId));
-  }
+  };
 
   useEffect(() => {
     dispatch(getAllOrdersByUserId(user?.id));
@@ -66,7 +66,7 @@ const ShoppingOrders=() =>{
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
                       <Badge
-                        className={`py-1 px-3 ${
+                        className={`py-1 px-3 text-white ${
                           orderItem?.orderStatus === "confirmed"
                             ? "bg-green-500"
                             : orderItem?.orderStatus === "rejected"
@@ -87,6 +87,7 @@ const ShoppingOrders=() =>{
                         }}
                       >
                         <Button
+                          variant="submit"
                           onClick={() =>
                             handleFetchOrderDetails(orderItem?._id)
                           }
@@ -104,6 +105,6 @@ const ShoppingOrders=() =>{
       </CardContent>
     </Card>
   );
-}
+};
 
 export default ShoppingOrders;
