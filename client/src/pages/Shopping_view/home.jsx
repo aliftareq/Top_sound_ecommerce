@@ -5,16 +5,11 @@ import {
   BabyIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  CloudLightning,
   Headset,
-  Heater,
   Images,
   Keyboard,
   Laptop,
-  Shirt,
-  ShoppingBasket,
   Speaker,
-  WashingMachine,
   Watch,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,12 +35,12 @@ const categoriesWithIcon = [
 ];
 
 const brandsWithIcon = [
-  { id: "nike", label: "Nike", icon: Shirt },
-  { id: "adidas", label: "Adidas", icon: WashingMachine },
-  { id: "puma", label: "Puma", icon: ShoppingBasket },
-  { id: "levi", label: "Levi's", icon: Airplay },
-  { id: "zara", label: "Zara", icon: Images },
-  { id: "h&m", label: "H&M", icon: Heater },
+  { id: "kbroad", label: "Kbroad", icon: Speaker },
+  { id: "oraimo", label: "Oraimo", icon: Headset },
+  { id: "logitech", label: "Logitech", icon: Keyboard },
+  { id: "apple", label: "Apple", icon: Airplay },
+  { id: "xiaomi", label: "Xiaomi", icon: Watch },
+  { id: "others", label: "Others", icon: Laptop },
 ];
 const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

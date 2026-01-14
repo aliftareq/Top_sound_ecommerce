@@ -21,7 +21,7 @@ const initialFormData = {
   category: "",
   brand: "",
   price: "",
-  salePrice: "",
+  OfferPrice: "",
   totalStock: "",
   averageReview: 0,
 };

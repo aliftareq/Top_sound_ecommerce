@@ -155,29 +155,29 @@ export const categoryOptionsMap = {
 };
 
 export const brandOptionsMap = {
-  nike: "Nike",
-  adidas: "Adidas",
-  puma: "Puma",
-  levi: "Levi",
-  zara: "Zara",
-  "h&m": "H&M",
+  kbroad: "Kbroad",
+  oraimo: "Oraimo",
+  logitech: "Logitech",
+  apple: "Apple",
+  xiaomi: "Xiaomi",
+  others: "Others",
 };
 
 export const filterOptions = {
   category: [
-    { id: "men", label: "Men" },
-    { id: "women", label: "Women" },
-    { id: "kids", label: "Kids" },
+    { id: "sounbox", label: "Sound-Box" },
+    { id: "headphone", label: "Head-Phone" },
+    { id: "Keyboard", label: "Keyboard" },
+    { id: "smartwatch", label: "Smartwatch" },
     { id: "accessories", label: "Accessories" },
-    { id: "footwear", label: "Footwear" },
   ],
   brand: [
-    { id: "nike", label: "Nike" },
-    { id: "adidas", label: "Adidas" },
-    { id: "puma", label: "Puma" },
-    { id: "levi", label: "Levi's" },
-    { id: "zara", label: "Zara" },
-    { id: "h&m", label: "H&M" },
+    { id: "kbroad", label: "Kbroad" },
+    { id: "oraimo", label: "Oraimo" },
+    { id: "logitech", label: "Logitech" },
+    { id: "apple", label: "Apple" },
+    { id: "xiaomi", label: "Xiaomi" },
+    { id: "others", label: "Others" },
   ],
 };
 

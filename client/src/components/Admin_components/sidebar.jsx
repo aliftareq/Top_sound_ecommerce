@@ -1,6 +1,7 @@
 import {
   BadgeCheck,
   ChartNoAxesCombined,
+  Image,
   LayoutDashboard,
   ShoppingBasket,
 } from "lucide-react";
@@ -26,6 +27,12 @@ const adminSidebarMenuItems = [
     label: "Orders",
     path: "/admin/orders",
     icon: <BadgeCheck />,
+  },
+  {
+    id: "feature",
+    label: "FeatureImages",
+    path: "/admin/FeatureImages",
+    icon: <Image />,
   },
 ];
 
