@@ -21,6 +21,7 @@ const AdminProductTile = ({
 
         <CardContent className="p-4">
           <h2 className="text-xl font-bold mb-2 mt-2">{product?.title}</h2>
+          <h2 className="text-xl font-light mb-2 mt-2">Available stock : {product?.totalStock}</h2>
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${

@@ -1,3 +1,5 @@
+import { Keyboard } from "lucide-react";
+
 export const registerFormControls = [
   {
     name: "userName",
@@ -58,11 +60,11 @@ export const addProductFormElements = [
     name: "category",
     componentType: "select",
     options: [
-      { id: "men", label: "Men" },
-      { id: "women", label: "Women" },
-      { id: "kids", label: "Kids" },
+      { id: "sounbox", label: "Sound-Box" },
+      { id: "headphone", label: "Head-Phone" },
+      { id: "Keyboard", label: "Keyboard" },
+      { id: "smartwatch", label: "Smartwatch" },
       { id: "accessories", label: "Accessories" },
-      { id: "footwear", label: "Footwear" },
     ],
   },
   {
@@ -70,12 +72,12 @@ export const addProductFormElements = [
     name: "brand",
     componentType: "select",
     options: [
-      { id: "nike", label: "Nike" },
-      { id: "adidas", label: "Adidas" },
-      { id: "puma", label: "Puma" },
-      { id: "levi", label: "Levi's" },
-      { id: "zara", label: "Zara" },
-      { id: "h&m", label: "H&M" },
+      { id: "kbroad", label: "Kbroad" },
+      { id: "oraimo", label: "Oraimo" },
+      { id: "logitech", label: "Logitech" },
+      { id: "apple", label: "Apple" },
+      { id: "xiaomi", label: "Xiaomi" },
+      { id: "others", label: "Others" },
     ],
   },
   {
@@ -86,11 +88,11 @@ export const addProductFormElements = [
     placeholder: "Enter product price",
   },
   {
-    label: "Sale Price",
-    name: "salePrice",
+    label: "Offer Price",
+    name: "OfferPrice",
     componentType: "input",
     type: "number",
-    placeholder: "Enter sale price (optional)",
+    placeholder: "Enter offer price (optional)",
   },
   {
     label: "Total Stock",
@@ -109,27 +111,27 @@ export const shoppingViewHeaderMenuItems = [
   },
   {
     id: "products",
-    label: "Products",
+    label: "All Products",
     path: "/shop/listing",
   },
   {
-    id: "men",
-    label: "Men",
+    id: "soundbox",
+    label: "Sound-Box",
     path: "/shop/listing",
   },
   {
-    id: "women",
-    label: "Women",
+    id: "headphone",
+    label: "Headphone",
     path: "/shop/listing",
   },
   {
-    id: "kids",
-    label: "Kids",
+    id: "smartwatch",
+    label: "Smartwatch",
     path: "/shop/listing",
   },
   {
-    id: "footwear",
-    label: "Footwear",
+    id: "keyboard",
+    label: "KeyBoards",
     path: "/shop/listing",
   },
   {
@@ -145,11 +147,11 @@ export const shoppingViewHeaderMenuItems = [
 ];
 
 export const categoryOptionsMap = {
-  men: "Men",
-  women: "Women",
-  kids: "Kids",
+  soundbox: "Sound-Box",
+  headphone: "HeadPhone",
+  smartwatch: "smartwatch",
+  keyboard: "Keyborad",
   accessories: "Accessories",
-  footwear: "Footwear",
 };
 
 export const brandOptionsMap = {

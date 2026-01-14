@@ -6,14 +6,16 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CloudLightning,
-  Footprints,
+  Headset,
   Heater,
   Images,
+  Keyboard,
+  Laptop,
   Shirt,
-  ShirtIcon,
   ShoppingBasket,
+  Speaker,
   WashingMachine,
-  WatchIcon,
+  Watch,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -30,11 +32,11 @@ import ShoppingProductTile from "@/components/Shopping_components/product-tile";
 import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 
 const categoriesWithIcon = [
-  { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: CloudLightning },
-  { id: "kids", label: "Kids", icon: BabyIcon },
-  { id: "accessories", label: "Accessories", icon: WatchIcon },
-  { id: "footwear", label: "Footwear", icon: Footprints },
+  { id: "sounbox", label: "Sound-Box", icon: Speaker },
+  { id: "headphone", label: "HeadPhone", icon: Headset },
+  { id: "smartwatch", label: "Smartwatch", icon: Watch },
+  { id: "keyboard", label: "KeyBoard", icon: Keyboard },
+  { id: "accessories", label: "Accessories", icon: Laptop },
 ];
 
 const brandsWithIcon = [
