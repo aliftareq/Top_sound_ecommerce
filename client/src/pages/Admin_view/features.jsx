@@ -1,8 +1,13 @@
 import ProductImageUpload from "@/components/Admin_components/image-upload";
 import { Button } from "@/components/ui/button";
-import { addFeatureImage, getFeatureImages } from "@/store/common-slice";
+import {
+  addFeatureImage,
+  deleteFeatureImage,
+  getFeatureImages,
+} from "@/store/common-slice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { X } from "lucide-react";
 
 function AdminFeatures() {
   const [imageFile, setImageFile] = useState(null);
@@ -11,10 +16,20 @@ function AdminFeatures() {
   const dispatch = useDispatch();
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
-  console.log(uploadedImageUrl, "uploadedImageUrl");
+  console.log(featureImageList, "uploadedImageUrl");
 
   const handleUploadFeatureImage = () => {
     dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getFeatureImages());
+        setImageFile(null);
+        setUploadedImageUrl("");
+      }
+    });
+  };
+
+  const handleRemoveImage = (id) => {
+    dispatch(deleteFeatureImage(id)).then((data) => {
       if (data?.payload?.success) {
         dispatch(getFeatureImages());
         setImageFile(null);
@@ -55,6 +70,17 @@ function AdminFeatures() {
                   src={featureImgItem.image}
                   className="w-full h-[300px] object-cover rounded-t-lg"
                 />
+
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(featureImgItem._id)}
+                  className="absolute top-2 right-2 z-10
+               bg-black/60 text-white
+               rounded-full p-1
+               hover:bg-black/80 transition"
+                >
+                  <X size={16} />
+                </button>
               </div>
             ))
           : null}
