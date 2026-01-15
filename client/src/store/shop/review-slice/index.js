@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   reviews: [],
+  message:"",
 };
 
 export const addReview = createAsyncThunk(
@@ -32,6 +33,18 @@ const reviewSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(addReview.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addReview.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(addReview.rejected, (state) => {
+        state.isLoading = false;
+        state.reviews = [];
+      })
       .addCase(getReviews.pending, (state) => {
         state.isLoading = true;
       })
