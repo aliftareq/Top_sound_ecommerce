@@ -1,0 +1,28 @@
+{
+  "nav.home": "Home",
+  "nav.shop": "Shop",
+  "nav.cart": "Cart",
+  "nav.login": "Login",
+  "nav.logout": "Logout",
+
+  "nav.allProducts": "All Products",
+  "nav.soundbox": "Sound-Box",
+  "nav.headphone": "Headphone",
+  "nav.smartwatch": "Smartwatch",
+  "nav.keyboard": "Keyboards",
+  "nav.accessories": "Accessories",
+  "nav.search": "Search",
+
+  "home.title": "Welcome to our store",
+  "home.subtitle": "Best products at the best price",
+
+  "btn.addToCart": "Add to Cart",
+  "btn.checkout": "Checkout",
+
+  "brand.name": "Top Sound Technology",
+  "header.loggedInAs": "Logged in as",
+  "header.account": "Account",
+  "header.logout": "Logout",
+  "header.login": "Log In",
+  "sr.userCart": "User cart"
+}

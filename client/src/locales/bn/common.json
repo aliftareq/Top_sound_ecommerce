@@ -1,0 +1,29 @@
+{
+  "nav.home": "হোম",
+  "nav.shop": "শপ",
+  "nav.cart": "কার্ট",
+  "nav.login": "লগইন",
+  "nav.logout": "লগআউট",
+
+  "nav.allProducts": "সব পণ্য",
+  "nav.soundbox": "সাউন্ড বক্স",
+  "nav.headphone": "হেডফোন",
+  "nav.smartwatch": "স্মার্টওয়াচ",
+  "nav.keyboard": "কিবোর্ড",
+  "nav.accessories": "অ্যাক্সেসরিজ",
+  "nav.search": "সার্চ",
+
+  "home.title": "আমাদের স্টোরে স্বাগতম",
+  "home.subtitle": "সেরা দামে সেরা পণ্য",
+
+  "btn.addToCart": "কার্টে যোগ করুন",
+  "btn.checkout": "চেকআউট",
+
+  "brand.name": "টপ সাউন্ড টেকনোলজি",
+  "header.loggedInAs": "লগইন আছেন",
+  "header.account": "অ্যাকাউন্ট",
+  "header.logout": "লগআউট",
+  "header.login": "লগইন",
+  "sr.userCart": "ইউজার কার্ট"
+}
+

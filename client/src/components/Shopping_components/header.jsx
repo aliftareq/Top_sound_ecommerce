@@ -24,11 +24,14 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/auth_slice";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import UserCartWrapper from "./cart-wrapper";
+import LanguageToggle from "../Common_components/LanguageToggle";
+import { useTranslation } from "react-i18next";
 
 const MenuItems = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [setSearchParams] = useSearchParams();
+  const { t } = useTranslation();
 
   function handleNavigate(getCurrentMenuItem) {
     sessionStorage.removeItem("filters");
@@ -58,7 +61,7 @@ const MenuItems = () => {
           className="text-sm font-medium cursor-pointer hover:underline"
           key={menuItem.id}
         >
-          {menuItem.label}
+          {t(menuItem.labelKey)}
         </Label>
       ))}
     </nav>
@@ -71,6 +74,7 @@ const HeaderRightContent = () => {
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -95,7 +99,7 @@ const HeaderRightContent = () => {
           <span className="absolute top-[-5px] right-0.5 font-bold text-sm">
             {cartItems?.items?.length || 0}
           </span>
-          <span className="sr-only">User cart</span>
+          <span className="sr-only">{t("sr.userCart")}</span>
         </Button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
@@ -106,7 +110,7 @@ const HeaderRightContent = () => {
           }
         />
       </Sheet>
-
+      <LanguageToggle />
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -117,14 +121,14 @@ const HeaderRightContent = () => {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="right" className="w-56 bg-white">
-            <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
+            {t("header.loggedInAs")} {user?.userName}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => navigate("/shop/account")}
               className="cursor-pointer hover:underline"
             >
               <UserCog className="mr-2 h-4 w-4" />
-              Account
+              {t("header.account")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -132,13 +136,13 @@ const HeaderRightContent = () => {
               className="cursor-pointer hover:underline"
             >
               <LogOut className="mr-2 h-4 w-4" />
-              Logout
+              {t("header.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
         <Button variant="submit">
-          <Link to="/auth/login">Log IN</Link>
+          <Link to="/auth/login">{t("header.login")}</Link>
         </Button>
       )}
     </div>
@@ -146,13 +150,13 @@ const HeaderRightContent = () => {
 };
 
 const ShoppingHeader = () => {
-  //  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link to="/" className="flex items-center gap-2">
           <Speaker className="h-6 w-6" />
-          <span className="font-bold">Top_Sound_Technology</span>
+          <span className="font-bold">{t("brand.name")}</span>
         </Link>
         <Sheet>
           <SheetTrigger asChild>

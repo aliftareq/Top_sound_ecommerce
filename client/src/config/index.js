@@ -104,46 +104,14 @@ export const addProductFormElements = [
 ];
 
 export const shoppingViewHeaderMenuItems = [
-  {
-    id: "home",
-    label: "Home",
-    path: "/",
-  },
-  {
-    id: "products",
-    label: "All Products",
-    path: "/shop/listing",
-  },
-  {
-    id: "soundbox",
-    label: "Sound-Box",
-    path: "/shop/listing",
-  },
-  {
-    id: "headphone",
-    label: "Headphone",
-    path: "/shop/listing",
-  },
-  {
-    id: "smartwatch",
-    label: "Smartwatch",
-    path: "/shop/listing",
-  },
-  {
-    id: "keyboard",
-    label: "KeyBoards",
-    path: "/shop/listing",
-  },
-  {
-    id: "accessories",
-    label: "Accessories",
-    path: "/shop/listing",
-  },
-  {
-    id: "search",
-    label: "Search",
-    path: "/shop/search",
-  },
+  { id: "home", labelKey: "nav.home", path: "/" },
+  { id: "products", labelKey: "nav.allProducts", path: "/shop/listing" },
+  { id: "soundbox", labelKey: "nav.soundbox", path: "/shop/listing" },
+  { id: "headphone", labelKey: "nav.headphone", path: "/shop/listing" },
+  { id: "smartwatch", labelKey: "nav.smartwatch", path: "/shop/listing" },
+  { id: "keyboard", labelKey: "nav.keyboard", path: "/shop/listing" },
+  { id: "accessories", labelKey: "nav.accessories", path: "/shop/listing" },
+  { id: "search", labelKey: "nav.search", path: "/shop/search" },
 ];
 
 export const categoryOptionsMap = {
