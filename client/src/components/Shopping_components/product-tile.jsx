@@ -25,7 +25,7 @@ const ShoppingProductTile = ({
             <Badge className="absolute top-2 left-2 bg-yellow-500 hover:bg-yellow-500">
               {`Only ${product?.totalStock} items left`}
             </Badge>
-          ) : product?.salePrice > 0 ? (
+          ) : product?.OfferPrice > 0 ? (
             <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
               On Sale
             </Badge>
@@ -34,24 +34,24 @@ const ShoppingProductTile = ({
         <CardContent className="p-4">
           <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
           <div className="flex justify-between items-center mb-2">
-            <span className="text-[16px] text-muted-foreground">
+            <span className="text-[16px] text-black">
               {categoryOptionsMap[product?.category]}
             </span>
-            <span className="text-[16px] text-muted-foreground">
+            <span className="text-[16px] text-black">
               {brandOptionsMap[product?.brand]}
             </span>
           </div>
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${
-                product?.salePrice > 0 ? "line-through" : ""
+                product?.OfferPrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
-              ${product?.price}
+              ৳{product?.price}
             </span>
-            {product?.salePrice > 0 ? (
+            {product?.OfferPrice > 0 ? (
               <span className="text-lg font-semibold text-primary">
-                ${product?.salePrice}
+                ৳{product?.OfferPrice}
               </span>
             ) : null}
           </div>
@@ -59,12 +59,15 @@ const ShoppingProductTile = ({
       </div>
       <CardFooter>
         {product?.totalStock === 0 ? (
-          <Button  variant="submit" className="w-full opacity-60 cursor-not-allowed mb-4">
+          <Button
+            variant="submit"
+            className="w-full opacity-60 cursor-not-allowed mb-4"
+          >
             Out Of Stock
           </Button>
         ) : (
           <Button
-           variant="submit"
+            variant="submit"
             onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
             className="w-full mb-4"
           >
@@ -74,6 +77,6 @@ const ShoppingProductTile = ({
       </CardFooter>
     </Card>
   );
-}
+};
 
 export default ShoppingProductTile;

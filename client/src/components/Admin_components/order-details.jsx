@@ -4,7 +4,7 @@ import { DialogContent } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   getAllOrdersForAdmin,
   getOrderDetailsForAdmin,
@@ -12,14 +12,12 @@ import {
 } from "@/store/admin/order-slice";
 import { toast } from "sonner";
 
-
 const initialFormData = {
   status: "",
 };
 
 function AdminOrderDetailsView({ orderDetails }) {
   const [formData, setFormData] = useState(initialFormData);
-  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   console.log(orderDetails, "orderDetails");
@@ -35,7 +33,7 @@ function AdminOrderDetailsView({ orderDetails }) {
         dispatch(getOrderDetailsForAdmin(orderDetails?._id));
         dispatch(getAllOrdersForAdmin());
         setFormData(initialFormData);
-        toast.success(data?.payload?.message)
+        toast.success(data?.payload?.message);
       }
     });
   }
@@ -68,9 +66,13 @@ function AdminOrderDetailsView({ orderDetails }) {
             <p className="font-medium">Order Status</p>
             <Label>
               <Badge
-                className={`py-1 px-3 ${
+                className={`py-1 px-3 text-white ${
                   orderDetails?.orderStatus === "confirmed"
                     ? "bg-green-500"
+                    : orderDetails?.orderStatus === "delivered"
+                    ? "bg-green-600"
+                    : orderDetails?.orderStatus === "inShipping"
+                    ? "bg-yellow-500"
                     : orderDetails?.orderStatus === "rejected"
                     ? "bg-red-600"
                     : "bg-black"
@@ -101,8 +103,8 @@ function AdminOrderDetailsView({ orderDetails }) {
         <div className="grid gap-4">
           <div className="grid gap-2">
             <div className="font-medium">Shipping Info</div>
-            <div className="grid gap-0.5 text-muted-foreground">
-              <span>{user.userName}</span>
+            <div className="grid gap-0.5 text-black">
+              <span>{orderDetails?.userId?.userName}</span>
               <span>{orderDetails?.addressInfo?.address}</span>
               <span>{orderDetails?.addressInfo?.city}</span>
               <span>{orderDetails?.addressInfo?.pincode}</span>

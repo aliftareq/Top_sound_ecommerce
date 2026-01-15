@@ -1,7 +1,11 @@
 import { Schema, model } from "mongoose";
 
 const OrderSchema = new Schema({
-  userId: String,
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User", 
+    required: true,
+  },
   cartId: String,
   cartItems: [
     {

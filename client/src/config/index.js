@@ -165,7 +165,7 @@ export const brandOptionsMap = {
 
 export const filterOptions = {
   category: [
-    { id: "sounbox", label: "Sound-Box" },
+    { id: "soundbox", label: "Sound-Box" },
     { id: "headphone", label: "Head-Phone" },
     { id: "Keyboard", label: "Keyboard" },
     { id: "smartwatch", label: "Smartwatch" },

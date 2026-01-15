@@ -10,7 +10,7 @@ const UserCartItemsContent = ({ cartItem }) => {
   const { productList } = useSelector((state) => state.shopProducts);
   const dispatch = useDispatch();
 
-  const handleUpdateQuantity=(getCartItem, typeOfAction) =>{
+  const handleUpdateQuantity = (getCartItem, typeOfAction) => {
     if (typeOfAction == "plus") {
       let getCartItems = cartItems.items || [];
 
@@ -29,9 +29,7 @@ const UserCartItemsContent = ({ cartItem }) => {
         if (indexOfCurrentCartItem > -1) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
-            toast.error(
-              `No more product are left in the stock!!!`
-            );
+            toast.error(`No more product are left in the stock!!!`);
 
             return;
           }
@@ -53,9 +51,9 @@ const UserCartItemsContent = ({ cartItem }) => {
         toast.success("Cart item is updated successfully");
       }
     });
-  }
+  };
 
-  const handleCartItemDelete=(getCartItem) =>{
+  const handleCartItemDelete = (getCartItem) => {
     dispatch(
       deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
     ).then((data) => {
@@ -63,7 +61,7 @@ const UserCartItemsContent = ({ cartItem }) => {
         toast.success("Cart item is deleted successfully");
       }
     });
-  }
+  };
 
   return (
     <div className="flex items-center space-x-4">
@@ -99,7 +97,7 @@ const UserCartItemsContent = ({ cartItem }) => {
       </div>
       <div className="flex flex-col items-end">
         <p className="font-semibold">
-          $
+          ৳
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
             cartItem?.quantity

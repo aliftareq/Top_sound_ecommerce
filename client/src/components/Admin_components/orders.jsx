@@ -68,6 +68,10 @@ const AdminOrdersView = () => {
                         className={`py-1 px-3 text-white ${
                           orderItem?.orderStatus === "confirmed"
                             ? "bg-green-500"
+                            : orderItem?.orderStatus === "delivered"
+                            ? "bg-green-600"
+                            : orderItem?.orderStatus === "inShipping"
+                            ? "bg-yellow-500"
                             : orderItem?.orderStatus === "rejected"
                             ? "bg-red-600"
                             : "bg-black"
@@ -76,7 +80,7 @@ const AdminOrdersView = () => {
                         {orderItem?.orderStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
+                    <TableCell className="text-xl font-bold">৳{orderItem?.totalAmount}</TableCell>
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}

@@ -28,7 +28,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const order = await Order.findById(id);
+    const order = await Order.findById(id).populate("userId");
 
     if (!order) {
       return res.status(404).json({
