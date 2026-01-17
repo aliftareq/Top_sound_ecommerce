@@ -10,17 +10,19 @@ const UserCartItemsContent = ({ cartItem }) => {
   const { productList } = useSelector((state) => state.shopProducts);
   const dispatch = useDispatch();
 
+  console.log(cartItem, "cartItem");
+
   const handleUpdateQuantity = (getCartItem, typeOfAction) => {
     if (typeOfAction == "plus") {
       let getCartItems = cartItems.items || [];
 
       if (getCartItems.length) {
         const indexOfCurrentCartItem = getCartItems.findIndex(
-          (item) => item.productId === getCartItem?.productId
+          (item) => item.productId === getCartItem?.productId,
         );
 
         const getCurrentProductIndex = productList.findIndex(
-          (product) => product._id === getCartItem?.productId
+          (product) => product._id === getCartItem?.productId,
         );
         const getTotalStock = productList[getCurrentProductIndex].totalStock;
 
@@ -45,7 +47,7 @@ const UserCartItemsContent = ({ cartItem }) => {
           typeOfAction === "plus"
             ? getCartItem?.quantity + 1
             : getCartItem?.quantity - 1,
-      })
+      }),
     ).then((data) => {
       if (data?.payload?.success) {
         toast.success("Cart item is updated successfully");
@@ -55,7 +57,7 @@ const UserCartItemsContent = ({ cartItem }) => {
 
   const handleCartItemDelete = (getCartItem) => {
     dispatch(
-      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
+      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId }),
     ).then((data) => {
       if (data?.payload?.success) {
         toast.success("Cart item is deleted successfully");
@@ -66,7 +68,7 @@ const UserCartItemsContent = ({ cartItem }) => {
   return (
     <div className="flex items-center space-x-4">
       <img
-        src={cartItem?.image}
+        src={cartItem?.mainImage}
         alt={cartItem?.title}
         className="w-20 h-20 rounded object-cover"
       />
@@ -99,8 +101,9 @@ const UserCartItemsContent = ({ cartItem }) => {
         <p className="font-semibold">
           ৳
           {(
-            (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
-            cartItem?.quantity
+            (cartItem?.offerPrice > 0
+              ? cartItem?.offerPrice
+              : cartItem?.price) * cartItem?.quantity
           ).toFixed(2)}
         </p>
         <Trash

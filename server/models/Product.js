@@ -2,17 +2,26 @@ import { Schema, model } from "mongoose";
 
 const ProductSchema = new Schema(
   {
-    image: String,
+    mainImage: {
+      type: String,
+      required: true,
+    },
+    images: [
+      {
+        type: String,
+      },
+    ],
+
     title: String,
     description: String,
     category: String,
     brand: String,
     price: Number,
-    OfferPrice: Number,
+    offerPrice: Number,
     totalStock: Number,
     averageReview: Number,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Product = model("Product", ProductSchema);

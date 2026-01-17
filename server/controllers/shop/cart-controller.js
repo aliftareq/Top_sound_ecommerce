@@ -36,7 +36,7 @@ const addToCart = async (req, res) => {
     }
 
     const findCurrentProductIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId,
     );
 
     if (findCurrentProductIndex === -1) {
@@ -79,7 +79,7 @@ const fetchCartItems = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
-      select: "image title price salePrice",
+      select: "mainImage title price offerPrice",
     });
 
     if (!cart) {
@@ -90,7 +90,7 @@ const fetchCartItems = async (req, res) => {
     }
 
     const validItems = cart.items.filter(
-      (productItem) => productItem.productId
+      (productItem) => productItem.productId,
     );
 
     if (validItems.length < cart.items.length) {
@@ -100,10 +100,10 @@ const fetchCartItems = async (req, res) => {
 
     const populateCartItems = validItems.map((item) => ({
       productId: item.productId._id,
-      image: item.productId.image,
+      mainImage: item.productId.mainImage,
       title: item.productId.title,
       price: item.productId.price,
-      salePrice: item.productId.salePrice,
+      offerPrice: item.productId.offerPrice,
       quantity: item.quantity,
     }));
 
@@ -150,7 +150,7 @@ const updateCartItemQty = async (req, res) => {
     }
 
     const findCurrentProductIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId,
     );
 
     if (findCurrentProductIndex === -1) {
@@ -165,15 +165,15 @@ const updateCartItemQty = async (req, res) => {
 
     await cart.populate({
       path: "items.productId",
-      select: "image title price salePrice",
+      select: "mainImage title price offerPrice",
     });
 
     const populateCartItems = cart.items.map((item) => ({
       productId: item.productId ? item.productId._id : null,
-      image: item.productId ? item.productId.image : null,
+      mainImage: item.productId ? item.productId.mainImage : null,
       title: item.productId ? item.productId.title : "Product not found",
       price: item.productId ? item.productId.price : null,
-      salePrice: item.productId ? item.productId.salePrice : null,
+      offerPrice: item.productId ? item.productId.offerPrice : null,
       quantity: item.quantity,
     }));
 
@@ -212,7 +212,7 @@ const deleteCartItem = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
-      select: "image title price salePrice",
+      select: "image title price offerPrice",
     });
 
     if (!cart) {
@@ -223,14 +223,14 @@ const deleteCartItem = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      (item) => item.productId._id.toString() !== productId
+      (item) => item.productId._id.toString() !== productId,
     );
 
     await cart.save();
 
     await cart.populate({
       path: "items.productId",
-      select: "image title price salePrice",
+      select: "image title price offerPrice",
     });
 
     const populateCartItems = cart.items.map((item) => ({
@@ -238,7 +238,7 @@ const deleteCartItem = async (req, res) => {
       image: item.productId ? item.productId.image : null,
       title: item.productId ? item.productId.title : "Product not found",
       price: item.productId ? item.productId.price : null,
-      salePrice: item.productId ? item.productId.salePrice : null,
+      offerPrice: item.productId ? item.productId.offerPrice : null,
       quantity: item.quantity,
     }));
 

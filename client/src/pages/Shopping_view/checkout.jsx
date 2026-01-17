@@ -25,8 +25,8 @@ const ShoppingCheckout = () => {
       ? cartItems.items.reduce(
           (sum, currentItem) =>
             sum +
-            (currentItem?.salePrice > 0
-              ? currentItem?.salePrice
+            (currentItem?.offerPrice > 0
+              ? currentItem?.offerPrice
               : currentItem?.price) *
               currentItem?.quantity,
           0
@@ -51,8 +51,8 @@ const ShoppingCheckout = () => {
         title: singleCartItem?.title,
         image: singleCartItem?.image,
         price:
-          singleCartItem?.salePrice > 0
-            ? singleCartItem?.salePrice
+          singleCartItem?.offerPrice > 0
+            ? singleCartItem?.offerPrice
             : singleCartItem?.price,
         quantity: singleCartItem?.quantity,
       })),

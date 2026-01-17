@@ -13,7 +13,7 @@ const AdminProductTile = ({
       <div>
         <div className="relative">
           <img
-            src={product?.image}
+            src={product?.mainImage}
             alt={product?.title}
             className="w-full h-[300px] object-cover"
           />
@@ -27,13 +27,13 @@ const AdminProductTile = ({
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${
-                product?.OfferPrice > 0 ? "line-through" : ""
+                product?.offerPrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
               ৳{product?.price}
             </span>
-            {product?.OfferPrice > 0 ? (
-              <span className="text-lg font-bold">৳{product?.OfferPrice}</span>
+            {product?.offerPrice > 0 ? (
+              <span className="text-lg font-bold">৳{product?.offerPrice}</span>
             ) : null}
           </div>
         </CardContent>

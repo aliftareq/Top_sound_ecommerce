@@ -15,7 +15,7 @@ const ShoppingProductTile = ({
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img
-            src={product?.image}
+            src={product?.mainImage}
             alt={product?.title}
             className="w-full h-[300px] object-cover rounded-t-lg"
           />
@@ -46,14 +46,14 @@ const ShoppingProductTile = ({
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${
-                product?.OfferPrice > 0 ? "line-through" : ""
+                product?.offerPrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
               ৳{product?.price}
             </span>
-            {product?.OfferPrice > 0 ? (
+            {product?.offerPrice > 0 ? (
               <span className="text-lg font-semibold text-primary">
-                ৳{product?.OfferPrice}
+                ৳{product?.offerPrice}
               </span>
             ) : null}
           </div>

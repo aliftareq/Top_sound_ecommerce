@@ -11,11 +11,11 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
       ? cartItems.reduce(
           (sum, currentItem) =>
             sum +
-            (currentItem?.salePrice > 0
-              ? currentItem?.salePrice
+            (currentItem?.offerPrice > 0
+              ? currentItem?.offerPrice
               : currentItem?.price) *
               currentItem?.quantity,
-          0
+          0,
         )
       : 0;
 

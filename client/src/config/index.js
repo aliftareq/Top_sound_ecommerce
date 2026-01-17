@@ -60,7 +60,7 @@ export const addProductFormElements = [
     name: "category",
     componentType: "select",
     options: [
-      { id: "sounbox", label: "Sound-Box" },
+      { id: "soundbox", label: "Sound-Box" },
       { id: "headphone", label: "Head-Phone" },
       { id: "Keyboard", label: "Keyboard" },
       { id: "smartwatch", label: "Smartwatch" },
@@ -89,7 +89,7 @@ export const addProductFormElements = [
   },
   {
     label: "Offer Price",
-    name: "OfferPrice",
+    name: "offerPrice",
     componentType: "input",
     type: "number",
     placeholder: "Enter offer price (optional)",

@@ -42,10 +42,9 @@ const registerUser = async (req, res) => {
 //login
 const loginUser = async (req, res) => {
   const { phoneNumber, password } = req.body;
-  console.log(phoneNumber, "phoneNumber");
 
   try {
-    const checkUser = await User.findOne({  phoneNumber });
+    const checkUser = await User.findOne({ phoneNumber });
     if (!checkUser)
       return res.json({
         success: false,

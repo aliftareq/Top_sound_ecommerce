@@ -10,18 +10,24 @@ import ProductImageUpload from "../../components/Admin_components/image-upload.j
 import { addProductFormElements } from "@/config";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewProduct, deleteProduct, editProduct, fetchAllProducts } from "@/store/admin/products-slice/index.js";
+import {
+  addNewProduct,
+  deleteProduct,
+  editProduct,
+  fetchAllProducts,
+} from "@/store/admin/products-slice/index.js";
 import { toast } from "sonner";
 import AdminProductTile from "@/components/Admin_components/product-tile.jsx";
 
 const initialFormData = {
-  image: null,
+  mainImage: "",
+  images: [],
   title: "",
   description: "",
   category: "",
   brand: "",
   price: "",
-  OfferPrice: "",
+  offerPrice: "",
   totalStock: "",
   averageReview: 0,
 };
@@ -30,15 +36,21 @@ const AdminProducts = () => {
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
     useState(false);
   const [formData, setFormData] = useState(initialFormData);
-  const [imageFile, setImageFile] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-  const [imageLoadingState, setImageLoadingState] = useState(false);
+
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [mainUploadedImageUrl, setMainUploadedImageUrl] = useState("");
+  const [mainimageLoadingState, setMainImageLoadingState] = useState(false);
+
+  const [galleryImageFiles, setGalleryImageFiles] = useState([]);
+  const [galleryUploadedUrls, setGalleryUploadedUrls] = useState([]);
+  const [galleryLoadingState, setGalleryLoadingState] = useState(false);
+
   const [currentEditedId, setCurrentEditedId] = useState(null);
 
   const { productList } = useSelector((state) => state.adminProducts);
   const dispatch = useDispatch();
 
- function onSubmit(event) {
+  const onSubmit = (event) => {
     event.preventDefault();
 
     currentEditedId !== null
@@ -46,7 +58,7 @@ const AdminProducts = () => {
           editProduct({
             id: currentEditedId,
             formData,
-          })
+          }),
         ).then((data) => {
           console.log(data, "edit");
 
@@ -60,41 +72,49 @@ const AdminProducts = () => {
       : dispatch(
           addNewProduct({
             ...formData,
-            image: uploadedImageUrl,
-          })
+            mainImage: mainUploadedImageUrl,
+            images: galleryUploadedUrls,
+          }),
         ).then((data) => {
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
             setOpenCreateProductsDialog(false);
-            setImageFile(null);
+            // reset everything
+            setMainImageFile(null);
+            setMainUploadedImageUrl("");
+            setGalleryImageFiles([]);
+            setGalleryUploadedUrls([]);
             setFormData(initialFormData);
+
             toast.success("Product added successfully");
           }
         });
-  }
+  };
 
-  const handleDelete=(getCurrentProductId) =>{
+  const handleDelete = (getCurrentProductId) => {
     dispatch(deleteProduct(getCurrentProductId)).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchAllProducts());
-        toast.success("Product deleted successfully")
+        toast.success("Product deleted successfully");
       }
     });
-  }
+  };
 
   const isFormValid = () => {
+    // main image required ONLY when adding new product
+    if (currentEditedId === null && !mainUploadedImageUrl) return false;
+
     return Object.keys(formData)
-      .filter((currentKey) => currentKey !== "averageReview")
+      .filter((key) => !["averageReview", "mainImage", "images"].includes(key))
       .map((key) => formData[key] !== "")
-      .every((item) => item);
-  }
-  
+      .every(Boolean);
+  };
 
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
-  console.log(formData, 'prodlist');
+  console.log(formData, "prodlist");
 
   return (
     <Fragment>
@@ -125,21 +145,34 @@ const AdminProducts = () => {
           setOpenCreateProductsDialog(false);
           setCurrentEditedId(null);
           setFormData(initialFormData);
+
+          setMainImageFile(null);
+          setMainUploadedImageUrl("");
+          setGalleryImageFiles([]);
+          setGalleryUploadedUrls([]);
         }}
       >
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
             <SheetTitle>
-             {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+              {currentEditedId !== null ? "Edit Product" : "Add New Product"}
             </SheetTitle>
           </SheetHeader>
           <ProductImageUpload
-            imageFile={imageFile}
-            setImageFile={setImageFile}
-            uploadedImageUrl={uploadedImageUrl}
-            setUploadedImageUrl={setUploadedImageUrl}
-            imageLoadingState={imageLoadingState}
-            setImageLoadingState={setImageLoadingState}
+            // main image
+            mainImageFile={mainImageFile}
+            setMainImageFile={setMainImageFile}
+            mainUploadedImageUrl={mainUploadedImageUrl}
+            setMainUploadedImageUrl={setMainUploadedImageUrl}
+            imageLoadingState={mainimageLoadingState}
+            setImageLoadingState={setMainImageLoadingState}
+            // gallery images
+            galleryImageFiles={galleryImageFiles}
+            setGalleryImageFiles={setGalleryImageFiles}
+            galleryUploadedUrls={galleryUploadedUrls}
+            setGalleryUploadedUrls={setGalleryUploadedUrls}
+            galleryLoadingState={galleryLoadingState}
+            setGalleryLoadingState={setGalleryLoadingState}
             isEditMode={currentEditedId !== null}
           />
           <div className="px-4 py-6">

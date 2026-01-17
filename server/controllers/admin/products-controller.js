@@ -21,34 +21,37 @@ const handleImageUpload = async (req, res) => {
   }
 };
 
-//add a new product
+// add a new product
 const addProduct = async (req, res) => {
   try {
     const {
-      image,
+      mainImage,
+      images = [], // default empty array if not sent
       title,
       description,
       category,
       brand,
       price,
-      OfferPrice,
+      offerPrice,   
       totalStock,
       averageReview,
     } = req.body;
 
     const newlyCreatedProduct = new Product({
-      image,
+      mainImage,
+      images,
       title,
       description,
       category,
       brand,
       price,
-      OfferPrice,
+      offerPrice,
       totalStock,
       averageReview,
     });
 
     await newlyCreatedProduct.save();
+
     res.status(201).json({
       success: true,
       data: newlyCreatedProduct,
@@ -61,6 +64,7 @@ const addProduct = async (req, res) => {
     });
   }
 };
+
 
 //fetch all products
 const fetchAllProducts = async (req, res) => {
@@ -79,18 +83,20 @@ const fetchAllProducts = async (req, res) => {
   }
 };
 
-//edit a product
+// edit a product
 const editProduct = async (req, res) => {
   try {
     const { id } = req.params;
+
     const {
-      image,
+      mainImage,
+      images,
       title,
       description,
       category,
       brand,
       price,
-      OfferPrice,
+      offerPrice,
       totalStock,
       averageReview,
     } = req.body;
@@ -102,18 +108,25 @@ const editProduct = async (req, res) => {
         message: "Product not found",
       });
 
+    // SAME FORMAT
     findProduct.title = title || findProduct.title;
     findProduct.description = description || findProduct.description;
     findProduct.category = category || findProduct.category;
     findProduct.brand = brand || findProduct.brand;
     findProduct.price = price === "" ? 0 : price || findProduct.price;
-    findProduct.OfferPrice =
-      OfferPrice === "" ? 0 : OfferPrice || findProduct.OfferPrice;
+    findProduct.offerPrice =
+      offerPrice === "" ? 0 : offerPrice || findProduct.offerPrice;
     findProduct.totalStock = totalStock || findProduct.totalStock;
-    findProduct.image = image || findProduct.image;
-    findProduct.averageReview = averageReview || findProduct.averageReview;
+    findProduct.averageReview =
+      averageReview || findProduct.averageReview;
+
+    // Images (safe)
+    findProduct.mainImage = mainImage || findProduct.mainImage;
+    findProduct.images =
+      images !== undefined ? images : findProduct.images;
 
     await findProduct.save();
+
     res.status(200).json({
       success: true,
       data: findProduct,
@@ -126,6 +139,7 @@ const editProduct = async (req, res) => {
     });
   }
 };
+
 
 //delete a product
 const deleteProduct = async (req, res) => {
