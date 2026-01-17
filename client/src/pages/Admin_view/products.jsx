@@ -174,6 +174,7 @@ const AdminProducts = () => {
             galleryLoadingState={galleryLoadingState}
             setGalleryLoadingState={setGalleryLoadingState}
             isEditMode={currentEditedId !== null}
+            showGallery={true}
           />
           <div className="px-4 py-6">
             <CommonForm

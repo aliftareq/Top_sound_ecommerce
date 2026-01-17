@@ -10,20 +10,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { X } from "lucide-react";
 
 function AdminFeatures() {
-  const [imageFile, setImageFile] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-  const [imageLoadingState, setImageLoadingState] = useState(false);
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [mainUploadedImageUrl, setMainUploadedImageUrl] = useState("");
+  const [mainimageLoadingState, setMainImageLoadingState] = useState(false);
   const dispatch = useDispatch();
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
   console.log(featureImageList, "uploadedImageUrl");
 
   const handleUploadFeatureImage = () => {
-    dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
+    dispatch(addFeatureImage(mainUploadedImageUrl)).then((data) => {
       if (data?.payload?.success) {
         dispatch(getFeatureImages());
-        setImageFile(null);
-        setUploadedImageUrl("");
+        setMainImageFile(null);
+        setMainUploadedImageUrl("");
       }
     });
   };
@@ -32,8 +32,8 @@ function AdminFeatures() {
     dispatch(deleteFeatureImage(id)).then((data) => {
       if (data?.payload?.success) {
         dispatch(getFeatureImages());
-        setImageFile(null);
-        setUploadedImageUrl("");
+        setMainImageFile(null);
+        setMainUploadedImageUrl("");
       }
     });
   };
@@ -46,14 +46,14 @@ function AdminFeatures() {
   return (
     <div>
       <ProductImageUpload
-        imageFile={imageFile}
-        setImageFile={setImageFile}
-        uploadedImageUrl={uploadedImageUrl}
-        setUploadedImageUrl={setUploadedImageUrl}
-        setImageLoadingState={setImageLoadingState}
-        imageLoadingState={imageLoadingState}
+        mainImageFile={mainImageFile}
+        setMainImageFile={setMainImageFile}
+        mainUploadedImageUrl={mainUploadedImageUrl}
+        setMainUploadedImageUrl={setMainUploadedImageUrl}
+        imageLoadingState={mainimageLoadingState}
+        setImageLoadingState={setMainImageLoadingState}
         isCustomStyling={true}
-        // isEditMode={currentEditedId !== null}
+        showGallery={false}
       />
       <Button
         variant="submit"

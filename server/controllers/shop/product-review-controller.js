@@ -16,7 +16,7 @@ const addProductReview = async (req, res) => {
     if (!order) {
       return res.status(200).json({
         success: false,
-        message: "You need to purchase product to review it.",
+        message: "You need to purchase this product to review it.",
       });
     }
 

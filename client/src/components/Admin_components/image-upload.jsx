@@ -16,15 +16,15 @@ const ProductImageUpload = ({
   setMainUploadedImageUrl,
   setImageLoadingState,
 
-  // gallery images
-  galleryImageFiles,
-  setGalleryImageFiles,
-  galleryUploadedUrls,
-  setGalleryUploadedUrls,
-  galleryLoadingState,
-  setGalleryLoadingState,
-
+  // gallery images (optional)
+  galleryImageFiles = [],
+  setGalleryImageFiles = () => {},
+  galleryUploadedUrls = [],
+  setGalleryUploadedUrls = () => {},
+  galleryLoadingState = false,
+  setGalleryLoadingState = () => {},
   isEditMode,
+  showGallery,
 }) => {
   const mainInputRef = useRef(null);
   const galleryInputRef = useRef(null);
@@ -33,6 +33,9 @@ const ProductImageUpload = ({
   const handleMainImageChange = (event) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) setMainImageFile(selectedFile);
+
+    // ✅ allow selecting same file again
+    event.target.value = "";
   };
 
   const handleRemoveMainImage = () => {
@@ -41,11 +44,11 @@ const ProductImageUpload = ({
     if (mainInputRef.current) mainInputRef.current.value = "";
   };
 
-  async function uploadMainImageToCloudinary() {
+  async function uploadMainImageToCloudinary(file) {
     setImageLoadingState(true);
 
     const data = new FormData();
-    data.append("my_file", mainImageFile);
+    data.append("my_file", file);
 
     const response = await axios.post(
       "http://localhost:5000/api/admin/products/upload-image",
@@ -60,8 +63,10 @@ const ProductImageUpload = ({
   }
 
   useEffect(() => {
-    if (mainImageFile !== null) uploadMainImageToCloudinary();
-  }, [mainImageFile]);
+    if (!mainImageFile) return;
+    if (isEditMode) return; // ✅ avoid upload in edit mode
+    uploadMainImageToCloudinary(mainImageFile);
+  }, [mainImageFile, isEditMode]);
 
   // ---------------- GALLERY IMAGES ----------------
   const uploadSingleToCloudinary = async (file) => {
@@ -81,15 +86,15 @@ const ProductImageUpload = ({
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
 
-    // clear input so you can pick the same file again later
+    // ✅ allow selecting same file again
     event.target.value = "";
 
     setGalleryLoadingState(true);
 
-    // append new files to existing ones
+    // append files
     setGalleryImageFiles((prev) => [...prev, ...files]);
 
-    // upload ONLY newly selected files, then append urls
+    // upload ONLY new files
     const newUrls = [];
     for (const file of files) {
       const url = await uploadSingleToCloudinary(file);
@@ -176,96 +181,96 @@ const ProductImageUpload = ({
         </div>
       </div>
 
-      {/* GALLERY IMAGES */}
-      <div>
-        <Label className="text-lg font-semibold m-2 block text-center">
-          Upload Gallery Images
-        </Label>
+      {/* ✅ GALLERY IMAGES (only if showGallery true) */}
+      {showGallery && (
+        <div>
+          <Label className="text-lg font-semibold m-2 block text-center">
+            Upload Gallery Images
+          </Label>
 
-        <div
-          className={`${
-            isEditMode ? "opacity-20" : ""
-          } border-2 border-dashed rounded-lg p-4 mx-4`}
-        >
-          <Input
-            id="gallery-images-upload"
-            type="file"
-            multiple
-            className="hidden"
-            ref={galleryInputRef}
-            onChange={handleGalleryImagesChange}
-            disabled={isEditMode}
-            accept="image/*"
-          />
+          <div
+            className={`${
+              isEditMode ? "opacity-20" : ""
+            } border-2 border-dashed rounded-lg p-4 mx-4`}
+          >
+            <Input
+              id="gallery-images-upload"
+              type="file"
+              multiple
+              className="hidden"
+              ref={galleryInputRef}
+              onChange={handleGalleryImagesChange}
+              disabled={isEditMode}
+              accept="image/*"
+            />
 
-          {galleryImageFiles.length === 0 ? (
-            <Label
-              htmlFor="gallery-images-upload"
-              className={`${
-                isEditMode ? "cursor-not-allowed" : ""
-              } flex flex-col items-center justify-center h-32 cursor-pointer`}
-            >
-              <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
-              <span>Click to upload multiple gallery images</span>
-            </Label>
-          ) : galleryLoadingState ? (
-            <Skeleton className="h-10 bg-gray-100" />
-          ) : (
-            <div className="space-y-2">
-              {/* Top actions: + and Clear All */}
-              <div className="flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => galleryInputRef.current?.click()}
-                  disabled={isEditMode}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <PlusIcon className="w-4 h-4" />
-                  <span className="sr-only">Add more images</span>
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handleClearGallery}
-                  disabled={isEditMode}
-                >
-                  Clear All
-                </Button>
-              </div>
-
-              {galleryImageFiles.map((file, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <FileIcon className="w-8 text-primary mr-2 h-8" />
-                  </div>
-                  <p className="text-sm font-medium">{file.name}</p>
+            {galleryImageFiles?.length === 0 ? (
+              <Label
+                htmlFor="gallery-images-upload"
+                className={`${
+                  isEditMode ? "cursor-not-allowed" : ""
+                } flex flex-col items-center justify-center h-32 cursor-pointer`}
+              >
+                <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
+                <span>Click to upload multiple gallery images</span>
+              </Label>
+            ) : galleryLoadingState ? (
+              <Skeleton className="h-10 bg-gray-100" />
+            ) : (
+              <div className="space-y-2">
+                <div className="flex justify-end gap-2">
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
+                    onClick={() => galleryInputRef.current?.click()}
+                    disabled={isEditMode}
                     className="text-muted-foreground hover:text-foreground"
-                    onClick={() => handleRemoveGalleryImage(index)}
+                  >
+                    <PlusIcon className="w-4 h-4" />
+                    <span className="sr-only">Add more images</span>
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleClearGallery}
                     disabled={isEditMode}
                   >
-                    <XIcon className="w-4 h-4" />
-                    <span className="sr-only">Remove File</span>
+                    Clear All
                   </Button>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
 
-        {/* Optional: show uploading state while adding more */}
-        {galleryLoadingState ? (
-          <div className="mx-4 mt-2">
-            <Skeleton className="h-10 bg-gray-100" />
+                {galleryImageFiles?.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <FileIcon className="w-8 text-primary mr-2 h-8" />
+                    </div>
+                    <p className="text-sm font-medium">{file.name}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => handleRemoveGalleryImage(index)}
+                      disabled={isEditMode}
+                    >
+                      <XIcon className="w-4 h-4" />
+                      <span className="sr-only">Remove File</span>
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ) : null}
-      </div>
+
+          {galleryLoadingState ? (
+            <div className="mx-4 mt-2">
+              <Skeleton className="h-10 bg-gray-100" />
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 };
