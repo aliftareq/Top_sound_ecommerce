@@ -13,16 +13,32 @@
   "nav.accessories": "Accessories",
   "nav.search": "Search",
 
+  "category.text": "Shop by category",
+  "brand.text": "Shop by Brand",
+  "feature.text": "Feature Products",
+
   "home.title": "Welcome to our store",
   "home.subtitle": "Best products at the best price",
 
   "btn.addToCart": "Add to Cart",
   "btn.checkout": "Checkout",
+  "btn.submit": "Submit",
+  "btn.seeAll": "See All",
 
   "brand.name": "Top Sound Technology",
   "header.loggedInAs": "Logged in as",
   "header.account": "Account",
   "header.logout": "Logout",
   "header.login": "Log In",
-  "sr.userCart": "User cart"
+  "sr.userCart": "User cart",
+  "review.text":"Write a review",
+
+  "login.title":"Welcome to Top Sound Technology Shopping",
+  "login.text1":"Sign in to your account",
+  "login.text2":"Dont have an account?",
+  "login.text3":"Register",
+  "login.phoneNo":"Phone Number",
+  "login.password":"Password",
+  "login.placeholderPhone":"Enter your mobile number",
+  "login.placeholderPassword":"Enter your password"
 }

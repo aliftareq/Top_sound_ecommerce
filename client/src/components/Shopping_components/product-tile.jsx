@@ -2,12 +2,14 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 import { Badge } from "../ui/badge";
+import { useTranslation } from "react-i18next";
 
 const ShoppingProductTile = ({
   product,
   handleGetProductDetails,
   handleAddtoCart,
 }) => {
+  const { t } = useTranslation();
   return (
     <Card className="w-full max-w-sm mx-auto overflow-hidden p-0">
       <div onClick={() => handleGetProductDetails(product?._id)}>
@@ -71,7 +73,7 @@ const ShoppingProductTile = ({
             onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
             className="w-full mb-4"
           >
-            Add to cart
+            {t("btn.addToCart")}
           </Button>
         )}
       </CardFooter>

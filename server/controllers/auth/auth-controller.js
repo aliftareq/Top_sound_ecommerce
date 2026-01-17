@@ -7,20 +7,21 @@ const { sign, verify } = jwt;
 
 //register
 const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
+  const { userName, phoneNumber, password } = req.body;
 
   try {
-    const checkUser = await User.findOne({ email });
+    const checkUser = await User.findOne({ phoneNumber });
     if (checkUser)
       return res.json({
         success: false,
-        message: "User Already exists with the same email! Please try again",
+        message:
+          "User Already exists with the same Phone Number! Please try again",
       });
 
     const hashPassword = await hash(password, 12);
     const newUser = new User({
       userName,
-      email,
+      phoneNumber,
       password: hashPassword,
     });
 
@@ -40,20 +41,18 @@ const registerUser = async (req, res) => {
 
 //login
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { phoneNumber, password } = req.body;
+  console.log(phoneNumber, "phoneNumber");
 
   try {
-    const checkUser = await User.findOne({ email });
+    const checkUser = await User.findOne({  phoneNumber });
     if (!checkUser)
       return res.json({
         success: false,
         message: "User doesn't exists! Please register first",
       });
 
-    const checkPasswordMatch = await compare(
-      password,
-      checkUser.password
-    );
+    const checkPasswordMatch = await compare(password, checkUser.password);
     if (!checkPasswordMatch)
       return res.json({
         success: false,
@@ -64,11 +63,11 @@ const loginUser = async (req, res) => {
       {
         id: checkUser._id,
         role: checkUser.role,
-        email: checkUser.email,
+        phoneNumber: checkUser.phoneNumber,
         userName: checkUser.userName,
       },
       "CLIENT_SECRET_KEY",
-      { expiresIn: "60m" }
+      { expiresIn: "60m" },
     );
 
     res.cookie("token", token, { httpOnly: true, secure: false }).json({
@@ -76,7 +75,7 @@ const loginUser = async (req, res) => {
       message: "Logged in successfully",
       user: {
         id: checkUser._id,
-        email: checkUser.email,
+        phoneNumber: checkUser.phoneNumber,
         role: checkUser.role,
         userName: checkUser.userName,
       },

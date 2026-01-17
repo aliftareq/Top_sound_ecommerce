@@ -1,12 +1,14 @@
+import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 
 function AuthLayout() {
+  const { t } = useTranslation();
   return (
     <div className="flex min-h-screen w-full">
       <div className="hidden lg:flex items-center justify-center bg-slate-800 w-2/5 px-12">
         <div className="max-w-md space-y-6 text-center text-primary-foreground">
           <h1 className="text-4xl text-white font-extrabold tracking-tight">
-            Welcome to Top Sound Technology Shopping
+            {t("login.title")}
           </h1>
         </div>
       </div>

@@ -25,13 +25,14 @@ import { getFeatureImages } from "@/store/common-slice";
 import { toast } from "sonner";
 import ShoppingProductTile from "@/components/Shopping_components/product-tile";
 import ProductDetailsDialog from "@/components/Shopping_components/product-details";
+import { useTranslation } from "react-i18next";
 
 const categoriesWithIcon = [
-  { id: "sounbox", label: "Sound-Box", icon: Speaker },
-  { id: "headphone", label: "HeadPhone", icon: Headset },
-  { id: "smartwatch", label: "Smartwatch", icon: Watch },
-  { id: "keyboard", label: "KeyBoard", icon: Keyboard },
-  { id: "accessories", label: "Accessories", icon: Laptop },
+  { id: "soundbox", labelKey: "nav.soundbox", icon: Speaker },
+  { id: "headphone", labelKey: "nav.headphone", icon: Headset },
+  { id: "smartwatch", labelKey: "nav.smartwatch", icon: Watch },
+  { id: "keyboard", labelKey: "nav.keyboard", icon: Keyboard },
+  { id: "accessories", labelKey: "nav.accessories", icon: Laptop },
 ];
 
 const brandsWithIcon = [
@@ -55,6 +56,7 @@ const ShoppingHome = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleNavigateToListingPage = (getCurrentItem, section) => {
     sessionStorage.removeItem("filters");
@@ -162,7 +164,7 @@ const ShoppingHome = () => {
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
-            Shop by category
+            {t("category.text")}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categoriesWithIcon.map((categoryItem) => (
@@ -174,7 +176,7 @@ const ShoppingHome = () => {
               >
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{categoryItem.label}</span>
+                  <span className="font-bold"> {t(categoryItem.labelKey)}</span>
                 </CardContent>
               </Card>
             ))}
@@ -184,7 +186,9 @@ const ShoppingHome = () => {
 
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            {t("brand.text")}
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {brandsWithIcon.map((brandItem) => (
               <Card
@@ -193,7 +197,7 @@ const ShoppingHome = () => {
               >
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
-                  <span className="font-bold">{brandItem.label}</span>
+                  <span className="font-bold">{t(brandItem.label)}</span>
                 </CardContent>
               </Card>
             ))}
@@ -204,18 +208,29 @@ const ShoppingHome = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
-            Feature Products
+            {t("feature.text")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {productList && productList.length > 0
-              ? productList.map((productItem) => (
-                  <ShoppingProductTile
-                    handleGetProductDetails={handleGetProductDetails}
-                    product={productItem}
-                    handleAddtoCart={handleAddtoCart}
-                  />
-                ))
+              ? productList
+                  .slice(0, 4)
+                  .map((productItem) => (
+                    <ShoppingProductTile
+                      handleGetProductDetails={handleGetProductDetails}
+                      product={productItem}
+                      handleAddtoCart={handleAddtoCart}
+                    />
+                  ))
               : null}
+          </div>
+          <div className="py-5">
+            <Button
+              variant="submit"
+              className="w-1/4 mx-auto block"
+              onClick={() => navigate("/shop/listing")}
+            >
+              {t("btn.seeAll")}
+            </Button>
           </div>
         </div>
       </section>

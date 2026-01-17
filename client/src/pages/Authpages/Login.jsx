@@ -2,18 +2,20 @@ import CommonForm from "@/components/Common_components/Form";
 import { loginFormControls } from "@/config";
 import { loginUser } from "@/store/auth_slice";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const initialState = {
-  email: "",
+  phoneNumber: "",
   password: "",
 };
 
 const AuthLogin = () => {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -33,15 +35,15 @@ const AuthLogin = () => {
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Sign in to your account 
+          {t("login.text1")}
         </h1>
         <p className="mt-2">
-          Dont have an account?
+          {t("login.text2")}
           <Link
             className="font-medium ml-2 text-primary hover:underline text-blue-800"
             to="/auth/register"
           >
-            Register
+            {t("login.text3")}
           </Link>
         </p>
       </div>

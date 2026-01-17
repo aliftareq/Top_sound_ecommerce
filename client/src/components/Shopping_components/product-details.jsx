@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -24,6 +25,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleRatingChange = (getRating) => {
     console.log(getRating, "getRating");
@@ -127,14 +129,14 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           <div className="flex items-center justify-between">
             <p
               className={`text-3xl font-bold text-primary ${
-                productDetails?.salePrice > 0 ? "line-through" : ""
+                productDetails?.OfferPrice > 0 ? "line-through" : ""
               }`}
             >
-              ${productDetails?.price}
+              ৳{productDetails?.price}
             </p>
-            {productDetails?.salePrice > 0 ? (
-              <p className="text-2xl font-bold text-muted-foreground">
-                ${productDetails?.salePrice}
+            {productDetails?.OfferPrice > 0 ? (
+              <p className="text-2xl font-bold text-black">
+                ৳{productDetails?.OfferPrice}
               </p>
             ) : null}
           </div>
@@ -142,7 +144,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
             <div className="flex items-center gap-0.5">
               <StarRatingComponent rating={averageReview} />
             </div>
-            <span className="text-muted-foreground">
+            <span className="text-black">
               ({averageReview.toFixed(2)})
             </span>
           </div>
@@ -165,7 +167,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                   )
                 }
               >
-                Add to Cart
+                {t("btn.addToCart")}
               </Button>
             )}
           </div>
@@ -199,7 +201,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
               )}
             </div>
             <div className="mt-10 flex-col flex gap-2">
-              <Label>Write a review</Label>
+              <Label>{t("review.text")}</Label>
               <div className="flex gap-1">
                 <StarRatingComponent
                   rating={rating}
@@ -210,14 +212,14 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 name="reviewMsg"
                 value={reviewMsg}
                 onChange={(event) => setReviewMsg(event.target.value)}
-                placeholder="Write a review..."
+                placeholder={t("review.text")}
               />
               <Button
                 variant="submit"
                 onClick={handleAddReview}
                 disabled={reviewMsg.trim() === ""}
               >
-                Submit
+                {t("btn.submit")}
               </Button>
             </div>
           </div>

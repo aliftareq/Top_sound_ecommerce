@@ -8,7 +8,7 @@ import { toast } from "sonner"
 
 const initialState = {
   userName: "",
-  email: "",
+  phoneNumber: "",
   password: "",
 };
 

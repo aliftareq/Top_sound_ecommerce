@@ -5,7 +5,7 @@ import enCommon from "./locales/en/common.json";
 import bnCommon from "./locales/bn/common.json";
 
 // load saved lang or default
-const savedLang = localStorage.getItem("lang") || "en";
+const savedLang = localStorage.getItem("lang") || "bn";
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -13,7 +13,7 @@ i18n.use(initReactI18next).init({
     bn: { translation: bnCommon }
   },
   lng: savedLang,
-  fallbackLng: "en",
+  fallbackLng: "bn",
   interpolation: { escapeValue: false }
 });
 

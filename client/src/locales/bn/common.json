@@ -13,17 +13,33 @@
   "nav.accessories": "অ্যাক্সেসরিজ",
   "nav.search": "সার্চ",
 
+  "category.text": "ক্যাটাগরি অনুযায়ী নির্বাচন করুন",
+  "brand.text": "ব্র্যান্ড অনুযায়ী নির্বাচন করুন",
+  "feature.text": "অফার চলমান প্রোডাক্টসমূহ",
+
   "home.title": "আমাদের স্টোরে স্বাগতম",
   "home.subtitle": "সেরা দামে সেরা পণ্য",
 
   "btn.addToCart": "কার্টে যোগ করুন",
   "btn.checkout": "চেকআউট",
+  "btn.submit": "সাবমিট করুন",
+  "btn.seeAll": "সকল অফার দেখুন",
 
   "brand.name": "টপ সাউন্ড টেকনোলজি",
   "header.loggedInAs": "লগইন আছেন",
   "header.account": "অ্যাকাউন্ট",
   "header.logout": "লগআউট",
   "header.login": "লগইন",
-  "sr.userCart": "ইউজার কার্ট"
-}
+  "sr.userCart": "ইউজার কার্ট",
+  "review.text": "আপনার রিভিউ লিখুন",
 
+  "login.title": "টপ সাউন্ড টেকনোলজিতে স্বাগতম",
+  "login.text1": "আপনার অ্যাকাউন্টে সাইন ইন করুন",
+  "login.text2": "অ্যাকাউন্ট নেই?",
+  "login.text3":"রেজিস্ট্রেশন করুন",
+  "login.phoneNo": "ফোন নম্বর",
+  "login.password": "পাসওয়ার্ড",
+  "login.placeholderPhone": "আপনার মোবাইল নম্বর লিখুন",
+  "login.placeholderPassword": "আপনার পাসওয়ার্ড লিখুন"
+
+}
