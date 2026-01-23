@@ -4,7 +4,7 @@ import { loginUser } from "@/store/auth_slice";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const initialState = {
@@ -16,6 +16,7 @@ const AuthLogin = () => {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -25,6 +26,11 @@ const AuthLogin = () => {
         toast.success(data?.payload?.message || "login successfull");
       } else {
         toast.error(data?.payload?.message || "login failed");
+        if (
+          data?.payload?.message == "User doesn't exists! Please register first"
+        ) {
+          navigate("/auth/register");
+        }
       }
     });
   };

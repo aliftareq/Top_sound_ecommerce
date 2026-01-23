@@ -126,7 +126,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-     <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw] max-h-[90vh] overflow-y-auto">
+     <DialogContent className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw] max-h-[90vh] overflow-y-auto">
         {/* LEFT: Main image + gallery thumbnails */}
         <div className="space-y-4">
           <div className="relative overflow-hidden rounded-lg">
@@ -172,7 +172,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         <div className="">
           <div>
             <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-            <div className="text-black text-xl my-2 space-y-1">
+            <div className="text-black text-sm md:text-xl my-2 space-y-1">
               {productDetails?.description?.split(";").map((item, index) => (
                 <p key={index}>{item.trim()}</p>
               ))}

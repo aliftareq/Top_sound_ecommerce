@@ -48,7 +48,7 @@ const MenuItems = () => {
 
     location.pathname.includes("listing") && currentFilter !== null
       ? setSearchParams(
-          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
+          new URLSearchParams(`?category=${getCurrentMenuItem.id}`),
         )
       : navigate(getCurrentMenuItem.path);
   }
@@ -150,7 +150,17 @@ const HeaderRightContent = () => {
 };
 
 const ShoppingHeader = () => {
+  const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const [openCartSheet, setOpenCartSheet] = useState(false);
+  const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    dispatch(fetchCartItems(user?.id));
+  }, [dispatch]);
+
+  console.log(cartItems, "cartitems");
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -158,6 +168,33 @@ const ShoppingHeader = () => {
           <Speaker className="h-6 w-6" />
           <span className="font-bold">{t("brand.name")}</span>
         </Link>
+        {/* cart-icon in mobi-screen */}
+        <Sheet
+          open={openCartSheet}
+          onOpenChange={() => setOpenCartSheet(false)}
+        >
+          <Button
+            onClick={() => setOpenCartSheet(true)}
+            variant="outline"
+            size="icon"
+            className="relative md:hidden"
+          >
+            <ShoppingCart className="w-6 h-6" />
+            <span className="absolute top-[-5px] right-0.5 font-bold text-sm">
+              {cartItems?.items?.length || 0}
+            </span>
+            <span className="sr-only">{t("sr.userCart")}</span>
+          </Button>
+          <UserCartWrapper
+            setOpenCartSheet={setOpenCartSheet}
+            cartItems={
+              cartItems && cartItems.items && cartItems.items.length > 0
+                ? cartItems.items
+                : []
+            }
+          />
+        </Sheet>
+        {/* menu in mobi-screnn  */}
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden">
