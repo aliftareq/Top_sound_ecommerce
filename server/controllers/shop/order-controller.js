@@ -4,7 +4,6 @@ import Cart from "#models/Cart";
 import Product from "#models/Product";
 import mongoose from "mongoose";
 
-
 const createOrder = async (req, res) => {
   try {
     const {
@@ -17,8 +16,6 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId,
-      payerId,
       cartId,
     } = req.body;
 
@@ -36,6 +33,28 @@ const createOrder = async (req, res) => {
     });
 
     await newlyCreatedOrder.save();
+
+    // ✅ Remove only ordered items from cart
+    if (cartId && cartItems?.length) {
+      const cart = await Cart.findById(cartId);
+
+      if (cart) {
+        const orderedProductIds = new Set(
+          cartItems.map((item) => String(item.productId)),
+        );
+
+        cart.items = cart.items.filter(
+          (cartItem) => !orderedProductIds.has(String(cartItem.productId)),
+        );
+
+        // ✅ If cart is empty, delete it
+        if (cart.items.length === 0) {
+          await Cart.findByIdAndDelete(cartId);
+        } else {
+          await cart.save();
+        }
+      }
+    }
 
     return res.status(201).json({
       success: true,

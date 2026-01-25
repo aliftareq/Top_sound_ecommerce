@@ -78,7 +78,7 @@ const ShoppingCheckout = () => {
       })),
       addressInfo: {
         addressId: currentSelectedAddress?._id,
-        fullAddress: currentSelectedAddress?.address,
+        fullAddress: currentSelectedAddress?.fullAddress,
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
       },

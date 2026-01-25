@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { DialogContent } from "../ui/dialog";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
+import { Label } from "../ui/label";
 
 function ShoppingOrderDetailsView({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
@@ -73,9 +74,7 @@ function ShoppingOrderDetailsView({ orderDetails }) {
             <div className="font-medium">Shipping Info</div>
             <div className="grid gap-0.5 text-black">
               <span>{user.userName}</span>
-              <span>{orderDetails?.addressInfo?.address}</span>
-              <span>{orderDetails?.addressInfo?.city}</span>
-              <span>{orderDetails?.addressInfo?.pincode}</span>
+              <span>{orderDetails?.addressInfo?.fullAddress}</span>
               <span>{orderDetails?.addressInfo?.phone}</span>
               <span>{orderDetails?.addressInfo?.notes}</span>
             </div>
