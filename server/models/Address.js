@@ -3,9 +3,7 @@ import { Schema, model } from "mongoose";
 const AddressSchema = new Schema(
   {
     userId: String,
-    address: String,
-    city: String,
-    pincode: String,
+    fullAddress: String,
     phone: String,
     notes: String,
   },

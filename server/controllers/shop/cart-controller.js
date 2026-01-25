@@ -212,7 +212,7 @@ const deleteCartItem = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
-      select: "image title price offerPrice",
+      select: "mainImage  title price offerPrice",
     });
 
     if (!cart) {
@@ -230,12 +230,12 @@ const deleteCartItem = async (req, res) => {
 
     await cart.populate({
       path: "items.productId",
-      select: "image title price offerPrice",
+      select: "mainImage  title price offerPrice",
     });
 
     const populateCartItems = cart.items.map((item) => ({
       productId: item.productId ? item.productId._id : null,
-      image: item.productId ? item.productId.image : null,
+      mainImage: item.productId ? item.productId.mainImage : null,
       title: item.productId ? item.productId.title : "Product not found",
       price: item.productId ? item.productId.price : null,
       offerPrice: item.productId ? item.productId.offerPrice : null,

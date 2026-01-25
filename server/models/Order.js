@@ -11,16 +11,14 @@ const OrderSchema = new Schema({
     {
       productId: String,
       title: String,
-      image: String,
+      mainImage: String,
       price: String,
       quantity: Number,
     },
   ],
   addressInfo: {
     addressId: String,
-    address: String,
-    city: String,
-    pincode: String,
+    fullAddress: String,
     phone: String,
     notes: String,
   },

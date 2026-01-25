@@ -2,9 +2,9 @@ import Address from "#models/Address";
 
 const addAddress = async (req, res) => {
   try {
-    const { userId, address, city, pincode, phone, notes } = req.body;
+    const { userId, fullAddress, phone, notes } = req.body;
 
-    if (!userId || !address || !city || !pincode || !phone || !notes) {
+    if (!userId || !phone || !notes) {
       return res.status(400).json({
         success: false,
         message: "Invalid data provided!",
@@ -13,9 +13,7 @@ const addAddress = async (req, res) => {
 
     const newlyCreatedAddress = new Address({
       userId,
-      address,
-      city,
-      pincode,
+      fullAddress,
       notes,
       phone,
     });

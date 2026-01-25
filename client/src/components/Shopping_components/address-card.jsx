@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Label } from "../ui/label";
 
-const AddressCard=({
+const AddressCard = ({
   addressInfo,
   handleDeleteAddress,
   handleEditAddress,
@@ -21,20 +21,36 @@ const AddressCard=({
           ? "border-green-900 border-4"
           : "border-black"
       }`}
+      variant="submit"
     >
       <CardContent className="grid p-4 gap-4">
-        <Label>Address: {addressInfo?.address}</Label>
-        <Label>City: {addressInfo?.city}</Label>
-        <Label>pincode: {addressInfo?.pincode}</Label>
+        <Label>Full-Address: {addressInfo?.fullAddress}</Label>
         <Label>Phone: {addressInfo?.phone}</Label>
         <Label>Notes: {addressInfo?.notes}</Label>
       </CardContent>
-      <CardFooter className="p-3 flex justify-between">
-        <Button variant="submit" onClick={() => handleEditAddress(addressInfo)}>Edit</Button>
-        <Button variant="submit" onClick={() => handleDeleteAddress(addressInfo)}>Delete</Button>
+      <div className="p-3 flex justify-between">
+        <Button
+          className="w-1/3 mx-auto"
+          variant="submit"
+          onClick={() => handleEditAddress(addressInfo)}
+        >
+          Edit
+        </Button>
+        <Button
+          className="w-1/3 mx-auto"
+          variant="submit"
+          onClick={() => handleDeleteAddress(addressInfo)}
+        >
+          Delete
+        </Button>
+      </div>
+      <CardFooter>
+        <Button className="w-full" variant="submit">
+          Select
+        </Button>
       </CardFooter>
     </Card>
   );
-}
+};
 
 export default AddressCard;

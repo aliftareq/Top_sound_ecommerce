@@ -158,25 +158,11 @@ export const sortOptions = [
 
 export const addressFormControls = [
   {
-    label: "Address",
-    name: "address",
+    label: "Full Address",
+    name: "fullAddress",
     componentType: "input",
     type: "text",
     placeholder: "Enter your address",
-  },
-  {
-    label: "City",
-    name: "city",
-    componentType: "input",
-    type: "text",
-    placeholder: "Enter your city",
-  },
-  {
-    label: "Pincode",
-    name: "pincode",
-    componentType: "input",
-    type: "text",
-    placeholder: "Enter your pincode",
   },
   {
     label: "Phone",

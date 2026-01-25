@@ -14,10 +14,8 @@ import AddressCard from "./address-card";
 import { toast } from "sonner";
 
 const initialAddressFormData = {
-  address: "",
-  city: "",
+  fullAddress: "",
   phone: "",
-  pincode: "",
   notes: "",
 };
 
@@ -82,10 +80,8 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
     setCurrentEditedId(getCuurentAddress?._id);
     setFormData({
       ...formData,
-      address: getCuurentAddress?.address,
-      city: getCuurentAddress?.city,
+      fullAddress: getCuurentAddress?.fullAddress,
       phone: getCuurentAddress?.phone,
-      pincode: getCuurentAddress?.pincode,
       notes: getCuurentAddress?.notes,
     });
   }

@@ -2,10 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
+import { useTranslation } from "react-i18next";
 
 const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const totalCartAmount =
     cartItems && cartItems.length > 0
       ? cartItems.reduce(
@@ -47,7 +48,7 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
             }}
             className="w-full mt-6"
           >
-            Checkout
+            {t("btn.order")}
           </Button>
         </div>
       ) : (

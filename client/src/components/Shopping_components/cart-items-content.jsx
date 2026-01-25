@@ -10,6 +10,8 @@ const UserCartItemsContent = ({ cartItem }) => {
   const { productList } = useSelector((state) => state.shopProducts);
   const dispatch = useDispatch();
 
+  console.log(cartItems, "cartItems");
+
   console.log(cartItem, "cartItem");
 
   const handleUpdateQuantity = (getCartItem, typeOfAction) => {
@@ -73,7 +75,9 @@ const UserCartItemsContent = ({ cartItem }) => {
         className="w-20 h-20 rounded object-cover"
       />
       <div className="flex-1">
-        <h3 className="text-sm md:text-xl md:font-extrabold">{cartItem?.title}</h3>
+        <h3 className="text-sm md:text-xl md:font-extrabold">
+          {cartItem?.title}
+        </h3>
         <div className="flex items-center gap-2 mt-1">
           <Button
             variant="outline"

@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
-import { Badge } from "../ui/badge";
 import { DialogContent } from "../ui/dialog";
-import { Label } from "../ui/label";
+import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
 function ShoppingOrderDetailsView({ orderDetails }) {

@@ -1,27 +1,37 @@
-/* eslint-disable react-hooks/immutability */
 import Address from "@/components/Shopping_components/address";
 import img from "../../assets/account.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/Shopping_components/cart-items-content";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
-import { Navigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+
+const DELIVERY_OPTIONS = [
+  { id: "inside_dhaka", label: "Inside Dhaka", charge: 120 },
+  { id: "outside_dhaka", label: "Out of Dhaka", charge: 150 },
+];
 
 const ShoppingCheckout = () => {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  const { approvalURL } = useSelector((state) => state.shopOrder);
+  const { orderDetails } = useSelector((state) => state.shopOrder);
+
+  console.log(orderDetails);
+
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
-  const [isPaymentStart, setIsPaymemntStart] = useState(false);
+  const [isOrderStart, setIsOrderStart] = useState(false);
+
+  const [selectedDelivery, setSelectedDelivery] = useState(
+    DELIVERY_OPTIONS[0].id,
+  );
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // console.log(cartItems, "cartItems");
-  console.log(approvalURL)
-
-  const totalCartAmount =
-    cartItems && cartItems.items && cartItems.items.length > 0
+  const itemsTotal = useMemo(() => {
+    return cartItems && cartItems.items && cartItems.items.length > 0
       ? cartItems.items.reduce(
           (sum, currentItem) =>
             sum +
@@ -29,12 +39,22 @@ const ShoppingCheckout = () => {
               ? currentItem?.offerPrice
               : currentItem?.price) *
               currentItem?.quantity,
-          0
+          0,
         )
       : 0;
+  }, [cartItems]);
 
-  const handleInitiatePaypalPayment = () => {
-    if (cartItems?.items?.length === 0) {
+  const deliveryCharge = useMemo(() => {
+    const found = DELIVERY_OPTIONS.find((o) => o.id === selectedDelivery);
+    return found ? found.charge : 0;
+  }, [selectedDelivery]);
+
+  const totalCartAmount = useMemo(() => {
+    return itemsTotal + deliveryCharge;
+  }, [itemsTotal, deliveryCharge]);
+
+  const handleInitiateOrder = () => {
+    if (!cartItems?.items || cartItems?.items?.length === 0) {
       toast.error("Your cart is empty. Please add items to proceed");
       return;
     }
@@ -49,7 +69,7 @@ const ShoppingCheckout = () => {
       cartItems: cartItems.items.map((singleCartItem) => ({
         productId: singleCartItem?.productId,
         title: singleCartItem?.title,
-        image: singleCartItem?.image,
+        mainImage: singleCartItem?.mainImage,
         price:
           singleCartItem?.offerPrice > 0
             ? singleCartItem?.offerPrice
@@ -58,65 +78,110 @@ const ShoppingCheckout = () => {
       })),
       addressInfo: {
         addressId: currentSelectedAddress?._id,
-        address: currentSelectedAddress?.address,
-        city: currentSelectedAddress?.city,
-        pincode: currentSelectedAddress?.pincode,
+        fullAddress: currentSelectedAddress?.address,
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
       },
+
       orderStatus: "pending",
-      paymentMethod: "SSLCommerz",
+      paymentMethod: "Cash On Delivery",
       paymentStatus: "pending",
+
+      // Total includes delivery charge
       totalAmount: totalCartAmount,
+
       orderDate: new Date(),
       orderUpdateDate: new Date(),
     };
 
-    dispatch(createNewOrder(orderData)).then((data) => {
-      console.log(data, "cartItems");
-      if (data?.payload?.success) {
-        setIsPaymemntStart(true);
+    setIsOrderStart(true);
+
+    dispatch(createNewOrder(orderData)).then((action) => {
+      if (action?.payload?.success) {
+        toast.success("Order created successfully!");
+        navigate("/shop/orderDetails");
       } else {
-        setIsPaymemntStart(false);
+        toast.error("Failed to create order!");
+        setIsOrderStart(false);
       }
     });
   };
 
-  if (approvalURL) {
-    window.location.href = approvalURL;
-  }
-
   return (
     <div className="flex flex-col">
       <div className="relative h-[300px] w-full overflow-hidden">
-        <img src={img} className="h-full w-full object-cover object-center" />
+        <img
+          src={img}
+          alt="Checkout"
+          className="h-full w-full object-cover object-center"
+        />
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
         <Address
           selectedId={currentSelectedAddress}
           setCurrentSelectedAddress={setCurrentSelectedAddress}
         />
+
         <div className="flex flex-col gap-4">
           {cartItems && cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((item) => (
-                <UserCartItemsContent cartItem={item} />
+                <UserCartItemsContent
+                  key={item?.productId || item?._id}
+                  cartItem={item}
+                />
               ))
             : null}
-          <div className="mt-8 space-y-4">
+
+          {/* ✅ Delivery options section */}
+          <div className="mt-4 rounded-lg border p-4 space-y-3">
+            <p className="font-semibold">Delivery Options</p>
+
+            {DELIVERY_OPTIONS.map((opt) => (
+              <label
+                key={opt.id}
+                className="flex items-center justify-between gap-3 cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="delivery"
+                    value={opt.id}
+                    checked={selectedDelivery === opt.id}
+                    onChange={() => setSelectedDelivery(opt.id)}
+                  />
+                  <span>{opt.label}</span>
+                </div>
+                <span className="font-medium">৳{opt.charge}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className="mt-4 space-y-3">
             <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount}</span>
+              <span className="font-medium">Items Total</span>
+              <span className="font-medium">৳{itemsTotal}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="font-medium">Delivery Charge</span>
+              <span className="font-medium">৳{deliveryCharge}</span>
+            </div>
+
+            <div className="flex justify-between border-t pt-3">
+              <span className="font-bold">Grand Total</span>
+              <span className="font-bold">৳{totalCartAmount}</span>
             </div>
           </div>
-          <div className="mt-4 w-full">
+
+          <div className="mt-2 w-full">
             <Button
               variant="submit"
-              onClick={handleInitiatePaypalPayment}
+              onClick={handleInitiateOrder}
               className="w-full"
+              disabled={isOrderStart}
             >
-              {isPaymentStart
-                ? "Processing Paypal Payment..."
-                : "Pay with Bkash"}
+              {isOrderStart ? "Processing Your Order..." : "Confirm order"}
             </Button>
           </div>
         </div>

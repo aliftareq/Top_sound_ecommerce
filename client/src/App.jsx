@@ -21,18 +21,24 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth_slice";
 import { Skeleton } from "./components/ui/skeleton";
 import PaymentSuccessPage from "./pages/Shopping_view/payment-success";
-import SSLReturnPage from "./pages/Shopping_view/SSL-return";
 import SearchProducts from "./pages/Shopping_view/search";
+import { useLocation } from "react-router-dom";
+import ShoppingOrderDetailsPage from "./pages/Shopping_view/OrderDetails";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
   return (
@@ -80,11 +86,10 @@ function App() {
             </CheckAuth>
           }
         >
-           <Route path="home" element={<ShoppingHome />} />
+          <Route path="home" element={<ShoppingHome />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
-          <Route path="SSL-return" element={<SSLReturnPage />} />
-          <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="orderDetails" element={<ShoppingOrderDetailsPage />} />
         </Route>
         {/* not found page  */}
         <Route path="*" element={<NotFoundPage />}></Route>

@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 const ShoppingProductTile = ({
   product,
   handleGetProductDetails,
-  handleAddtoCart,
 }) => {
   const { t } = useTranslation();
   return (
@@ -36,7 +35,6 @@ const ShoppingProductTile = ({
         <CardContent className="p-4">
           <div className="flex justify-between gap-2">
             <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
-            <Button variant="submit">See Details</Button>
           </div>
           <div className="flex justify-between items-center mb-2">
             <span className="text-[16px] text-black">
@@ -61,25 +59,10 @@ const ShoppingProductTile = ({
             ) : null}
           </div>
         </CardContent>
+        <CardFooter className="flex justify-center items-center my-5">
+          <Button className="w-3/4 mx-auto p-5" variant="submit">{t("btn.seeDetail")}</Button>
+        </CardFooter>
       </div>
-      <CardFooter>
-        {product?.totalStock === 0 ? (
-          <Button
-            variant="submit"
-            className="w-full opacity-60 cursor-not-allowed mb-4"
-          >
-            Out Of Stock
-          </Button>
-        ) : (
-          <Button
-            variant="submit"
-            onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-            className="w-full mb-4"
-          >
-            {t("btn.addToCart")}
-          </Button>
-        )}
-      </CardFooter>
     </Card>
   );
 };
