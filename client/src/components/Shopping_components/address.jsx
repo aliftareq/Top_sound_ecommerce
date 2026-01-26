@@ -15,6 +15,8 @@ import { toast } from "sonner";
 
 const initialAddressFormData = {
   fullAddress: "",
+  district: "",
+  thana: "",
   phone: "",
   notes: "",
 };
@@ -42,7 +44,7 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
             userId: user?.id,
             addressId: currentEditedId,
             formData,
-          })
+          }),
         ).then((data) => {
           if (data?.payload?.success) {
             dispatch(fetchAllAddresses(user?.id));
@@ -55,7 +57,7 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
           addNewAddress({
             ...formData,
             userId: user?.id,
-          })
+          }),
         ).then((data) => {
           if (data?.payload?.success) {
             dispatch(fetchAllAddresses(user?.id));
@@ -65,26 +67,29 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
         });
   };
 
-  const handleDeleteAddress=(getCurrentAddress) =>{
+  const handleDeleteAddress = (getCurrentAddress) => {
     dispatch(
-      deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })
+      deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id }),
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchAllAddresses(user?.id));
+        setFormData(initialAddressFormData);
         toast.success("Address deleted successfully");
       }
     });
-  }
+  };
 
-  const handleEditAddress=(getCuurentAddress) =>{
+  const handleEditAddress = (getCuurentAddress) => {
     setCurrentEditedId(getCuurentAddress?._id);
     setFormData({
       ...formData,
       fullAddress: getCuurentAddress?.fullAddress,
+      district: getCuurentAddress?.district,
+      thana: getCuurentAddress?.thana,
       phone: getCuurentAddress?.phone,
       notes: getCuurentAddress?.notes,
     });
-  }
+  };
 
   function isFormValid() {
     return Object.keys(formData)

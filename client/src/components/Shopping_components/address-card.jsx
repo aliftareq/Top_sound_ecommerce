@@ -25,6 +25,8 @@ const AddressCard = ({
     >
       <CardContent className="grid p-4 gap-4">
         <Label>Full-Address: {addressInfo?.fullAddress}</Label>
+        <Label>District: {addressInfo?.district}</Label>
+        <Label>Thana: {addressInfo?.thana}</Label>
         <Label>Phone: {addressInfo?.phone}</Label>
         <Label>Notes: {addressInfo?.notes}</Label>
       </CardContent>

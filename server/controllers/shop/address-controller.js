@@ -2,9 +2,10 @@ import Address from "#models/Address";
 
 const addAddress = async (req, res) => {
   try {
-    const { userId, fullAddress, phone, notes } = req.body;
+    const { userId, fullAddress, district, thana, phone, notes } = req.body;
 
-    if (!userId || !phone || !notes) {
+    // notes is optional now
+    if (!userId || !fullAddress || !district || !thana || !phone) {
       return res.status(400).json({
         success: false,
         message: "Invalid data provided!",
@@ -14,8 +15,10 @@ const addAddress = async (req, res) => {
     const newlyCreatedAddress = new Address({
       userId,
       fullAddress,
-      notes,
+      district,
+      thana,
       phone,
+      ...(notes ? { notes } : {}), // only set if provided
     });
 
     await newlyCreatedAddress.save();
@@ -23,6 +26,52 @@ const addAddress = async (req, res) => {
     res.status(201).json({
       success: true,
       data: newlyCreatedAddress,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Error",
+    });
+  }
+};
+
+const editAddress = async (req, res) => {
+  try {
+    const { userId, addressId } = req.params;
+    const { fullAddress, district, thana, phone, notes } = req.body;
+
+    if (!userId || !addressId) {
+      return res.status(400).json({
+        success: false,
+        message: "User and address id is required!",
+      });
+    }
+
+    // Only allow updating these fields (prevents updating _id/userId etc)
+    const updateData = {};
+    if (fullAddress !== undefined) updateData.fullAddress = fullAddress;
+    if (district !== undefined) updateData.district = district;
+    if (thana !== undefined) updateData.thana = thana;
+    if (phone !== undefined) updateData.phone = phone;
+    if (notes !== undefined) updateData.notes = notes; // can be "" if user clears it
+
+    const address = await Address.findOneAndUpdate(
+      { _id: addressId, userId },
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!address) {
+      return res.status(404).json({
+        success: false,
+        message: "Address not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: address,
     });
   } catch (e) {
     console.log(e);
@@ -48,47 +97,6 @@ const fetchAllAddress = async (req, res) => {
     res.status(200).json({
       success: true,
       data: addressList,
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
-  }
-};
-
-const editAddress = async (req, res) => {
-  try {
-    const { userId, addressId } = req.params;
-    const formData = req.body;
-
-    if (!userId || !addressId) {
-      return res.status(400).json({
-        success: false,
-        message: "User and address id is required!",
-      });
-    }
-
-    const address = await Address.findOneAndUpdate(
-      {
-        _id: addressId,
-        userId,
-      },
-      formData,
-      { new: true }
-    );
-
-    if (!address) {
-      return res.status(404).json({
-        success: false,
-        message: "Address not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: address,
     });
   } catch (e) {
     console.log(e);

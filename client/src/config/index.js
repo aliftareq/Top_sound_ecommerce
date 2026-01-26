@@ -165,6 +165,20 @@ export const addressFormControls = [
     placeholder: "Enter your address",
   },
   {
+    label: "District",
+    name: "district",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your district",
+  },
+  {
+    label: "Thana",
+    name: "thana",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your thana",
+  },
+  {
     label: "Phone",
     name: "phone",
     componentType: "input",
