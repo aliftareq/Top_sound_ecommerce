@@ -15,6 +15,8 @@ const OrderSchema = new Schema({
   addressInfo: {
     addressId: String,
     fullAddress: String,
+    district: String,
+    thana: String,
     phone: String,
     notes: String,
   },

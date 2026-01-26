@@ -180,14 +180,27 @@ const createSteadfastParcelForOrder = async (req, res) => {
       });
     }
 
-    // ✅ address validation (steadfast needs it)
-    const address = (order.addressInfo?.fullAddress || "").trim();
-    if (!address || address.length < 5) {
+    // ✅ address validation + include district/thana for Steadfast display
+    const fullAddress = (order.addressInfo?.fullAddress || "").trim();
+    const district = (order.addressInfo?.district || "").trim();
+    const thana = (order.addressInfo?.thana || "").trim();
+
+    if (!fullAddress || fullAddress.length < 5) {
       return res.status(400).json({
         success: false,
         message: "Recipient address is required.",
       });
     }
+
+    // Steadfast API doesn't have separate district/thana fields,
+    // so we embed them inside recipient_address.
+    const recipientAddress = [
+      fullAddress,
+      thana ? `Thana: ${thana}` : null,
+      district ? `District: ${district}` : null,
+    ]
+      .filter(Boolean)
+      .join(", "); // you can use "\n" if you prefer multiline
 
     // ✅ COD logic (recommended)
     // If already PAID, send cod_amount = 0
@@ -198,9 +211,9 @@ const createSteadfastParcelForOrder = async (req, res) => {
     const payload = {
       invoice,
       recipient_name: finalRecipientName,
-      recipient_phone: phone, // ✅ fixed
-      recipient_address: address,
-      cod_amount: codAmount, // ✅ fixed (number is ok)
+      recipient_phone: phone,
+      recipient_address: recipientAddress,
+      cod_amount: codAmount,
       note: (order.addressInfo?.notes || "").trim(),
       item_description: (order.cartItems || [])
         .map((i) => `${i.title} x${i.quantity}`)
@@ -245,6 +258,7 @@ const createSteadfastParcelForOrder = async (req, res) => {
     res.status(500).json({ success: false, message: e.message || "Some error occured!" });
   }
 };
+
 
 
 /**
@@ -317,8 +331,6 @@ export {
   getOrderDetailsForAdmin,
   updateOrderStatus,
   updatePaymentStatus,
-
-  // ✅ new
   createSteadfastParcelForOrder,
   syncSteadfastStatusForOrder,
 };
