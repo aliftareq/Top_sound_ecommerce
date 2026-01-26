@@ -79,6 +79,8 @@ const ShoppingCheckout = () => {
       addressInfo: {
         addressId: currentSelectedAddress?._id,
         fullAddress: currentSelectedAddress?.fullAddress,
+        district: currentSelectedAddress?.district,
+        thana: currentSelectedAddress?.thana,
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
       },

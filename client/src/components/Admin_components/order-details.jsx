@@ -409,7 +409,9 @@ function AdminOrderDetailsView({ orderDetails }) {
           <div className="font-medium">Shipping Info</div>
           <div className="grid gap-0.5 text-black">
             <span>{orderDetails?.userId?.userName}</span>
-            <span>{orderDetails?.addressInfo?.fullAddress}</span>
+            <span>{orderDetails?.addressInfo?.fullAddress},</span>
+            <span>{orderDetails?.addressInfo?.thana},</span>
+            <span>{orderDetails?.addressInfo?.district},</span>
             <span>{orderDetails?.addressInfo?.phone}</span>
             <span>{orderDetails?.addressInfo?.notes}</span>
           </div>
