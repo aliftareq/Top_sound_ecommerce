@@ -64,7 +64,10 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
-    await Order.findByIdAndUpdate(id, { orderStatus });
+    await Order.findByIdAndUpdate(id, {
+      orderStatus,
+      orderUpdateDate: new Date(),
+    });
 
     res.status(200).json({
       success: true,
@@ -79,4 +82,41 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-export { getAllOrdersOfAllUsers, getOrderDetailsForAdmin, updateOrderStatus };
+const updatePaymentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { paymentStatus } = req.body;
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found!",
+      });
+    }
+
+    await Order.findByIdAndUpdate(id, {
+      paymentStatus,
+      orderUpdateDate: new Date(),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Payment status is updated successfully!",
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+export {
+  getAllOrdersOfAllUsers,
+  getOrderDetailsForAdmin,
+  updateOrderStatus,
+  updatePaymentStatus,
+};
