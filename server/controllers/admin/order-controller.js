@@ -59,6 +59,64 @@ const getOrderDetailsForAdmin = async (req, res) => {
     });
   }
 };
+/**
+ * PUT /admin/orders/update-price/:id
+ * body: { totalAmount }
+ */
+const updateOrderPrice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { totalAmount } = req.body;
+
+    // ✅ validate
+    if (
+      totalAmount === undefined ||
+      totalAmount === null ||
+      totalAmount === ""
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Order price (totalAmount) is required!",
+      });
+    }
+
+    const price = Number(totalAmount);
+    if (Number.isNaN(price)) {
+      return res.status(400).json({
+        success: false,
+        message: "Order price must be a valid number!",
+      });
+    }
+
+    if (price < 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Order price cannot be negative!",
+      });
+    }
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found!" });
+    }
+
+    // ✅ update price + timestamp
+    await Order.findByIdAndUpdate(id, {
+      totalAmount: price,
+      orderUpdateDate: new Date(),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Order price is updated successfully!",
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ success: false, message: "Some error occured!" });
+  }
+};
 
 /**
  * PUT /admin/orders/update/:id
@@ -137,7 +195,9 @@ const createSteadfastParcelForOrder = async (req, res) => {
 
     const order = await Order.findById(id);
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found!" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found!" });
     }
 
     if (order.orderStatus !== "confirmed") {
@@ -255,11 +315,11 @@ const createSteadfastParcelForOrder = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ success: false, message: e.message || "Some error occured!" });
+    res
+      .status(500)
+      .json({ success: false, message: e.message || "Some error occured!" });
   }
 };
-
-
 
 /**
  * POST /admin/orders/steadfast/sync/:id
@@ -277,12 +337,10 @@ const syncSteadfastStatusForOrder = async (req, res) => {
     }
 
     if (!order?.steadfast?.invoice) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "This order has no Steadfast invoice yet.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "This order has no Steadfast invoice yet.",
+      });
     }
 
     const statusRes = await steadfastStatusByInvoice(order.steadfast.invoice);
@@ -329,6 +387,7 @@ const syncSteadfastStatusForOrder = async (req, res) => {
 export {
   getAllOrdersOfAllUsers,
   getOrderDetailsForAdmin,
+  updateOrderPrice,
   updateOrderStatus,
   updatePaymentStatus,
   createSteadfastParcelForOrder,

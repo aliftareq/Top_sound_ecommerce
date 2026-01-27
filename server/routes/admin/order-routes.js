@@ -4,6 +4,7 @@ import {
   getOrderDetailsForAdmin,
   updateOrderStatus,
   updatePaymentStatus,
+  updateOrderPrice, 
   createSteadfastParcelForOrder,
   syncSteadfastStatusForOrder,
 } from "../../controllers/admin/order-controller.js";
@@ -13,12 +14,12 @@ const router = Router();
 router.get("/get", getAllOrdersOfAllUsers);
 router.get("/details/:id", getOrderDetailsForAdmin);
 
+// Order updates
 router.put("/update/:id", updateOrderStatus);
 router.put("/update-payment/:id", updatePaymentStatus);
-
+router.put("/update-price/:id", updateOrderPrice); 
 // ✅ Steadfast integration
 router.post("/steadfast/create/:id", createSteadfastParcelForOrder);
 router.post("/steadfast/sync/:id", syncSteadfastStatusForOrder);
 
 export default router;
-
