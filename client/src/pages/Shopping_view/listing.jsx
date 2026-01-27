@@ -41,7 +41,7 @@ const ShoppingListing = () => {
   //states & hooks
   const dispatch = useDispatch();
   const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts
+    (state) => state.shopProducts,
   );
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
@@ -87,24 +87,21 @@ const ShoppingListing = () => {
   };
 
   const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
-
     if (!user) {
       toast.error("You must login first to add this item!!!");
       navigate("/auth/login");
     }
-    
+
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId
+        (item) => item.productId === getCurrentProductId,
       );
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
-          toast.error(
-            `Only ${getQuantity} items available in the stock`
-          );
+          toast.error(`Only ${getQuantity} items available in the stock`);
           return;
         }
       }
@@ -115,7 +112,7 @@ const ShoppingListing = () => {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-      })
+      }),
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
@@ -133,7 +130,7 @@ const ShoppingListing = () => {
   useEffect(() => {
     if (filters !== null && sort !== null)
       dispatch(
-        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
+        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }),
       );
   }, [dispatch, sort, filters]);
 
@@ -153,7 +150,9 @@ const ShoppingListing = () => {
       <ProductFilter filters={filters} handleFilter={handleFilter} />
       <div className="bg-background w-full rounded-lg shadow-sm">
         <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">All Products</h2>
+          <h2 className="hidden md:block text-lg font-extrabold">
+            All Products
+          </h2>
           <div className="flex items-center gap-3">
             <span className="text-slate-900 font-extrabold">
               Total Products : {productList?.length}
