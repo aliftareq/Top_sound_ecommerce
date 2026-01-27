@@ -8,7 +8,7 @@ const initialState = {
   orderDetails: null,
 
   isLoading: false, // page-level loading (fetch list/details)
-  actionLoading: false, // button-level loading (update/create/sync)
+  actionLoading: false, // button-level loading (update/create/sync/delete)
   error: null,
   successMessage: null,
 };
@@ -36,6 +36,38 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(
         err?.response?.data || { message: "Failed to load order details" }
+      );
+    }
+  }
+);
+
+// 🗑️ DELETE ORDER
+// backend: DELETE /api/admin/orders/delete/:id
+export const deleteOrderForAdmin = createAsyncThunk(
+  "/order/deleteOrderForAdmin",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${API_BASE}/delete/${id}`);
+      return { ...response.data, meta: { id } };
+    } catch (err) {
+      return rejectWithValue(
+        err?.response?.data || { message: "Failed to delete order" }
+      );
+    }
+  }
+);
+
+export const updateOrderPrice = createAsyncThunk(
+  "/order/updateOrderPrice",
+  async ({ id, totalAmount }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_BASE}/update-price/${id}`, {
+        totalAmount,
+      });
+      return { ...response.data, meta: { id, totalAmount } };
+    } catch (err) {
+      return rejectWithValue(
+        err?.response?.data || { message: "Failed to update order price" }
       );
     }
   }
@@ -73,25 +105,7 @@ export const updatePaymentStatus = createAsyncThunk(
   }
 );
 
-// ✅ NEW: update order price
-// backend: PUT /api/admin/orders/update-price/:id
-export const updateOrderPrice = createAsyncThunk(
-  "/order/updateOrderPrice",
-  async ({ id, totalAmount }, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(`${API_BASE}/update-price/${id}`, {
-        totalAmount,
-      });
-      return { ...response.data, meta: { id, totalAmount } };
-    } catch (err) {
-      return rejectWithValue(
-        err?.response?.data || { message: "Failed to update order price" }
-      );
-    }
-  }
-);
-
-// ✅ NEW: create steadfast parcel
+// ✅ create steadfast parcel
 // backend: POST /api/admin/orders/steadfast/create/:id
 export const createSteadfastParcelForOrder = createAsyncThunk(
   "/order/createSteadfastParcelForOrder",
@@ -101,7 +115,6 @@ export const createSteadfastParcelForOrder = createAsyncThunk(
         recipient_name,
         delivery_type,
       });
-      console.log(response.data);
       return response.data; // expects {success, message, data: order}
     } catch (err) {
       return rejectWithValue(
@@ -111,7 +124,7 @@ export const createSteadfastParcelForOrder = createAsyncThunk(
   }
 );
 
-// ✅ NEW: sync steadfast status
+// ✅ sync steadfast status
 // backend: POST /api/admin/orders/steadfast/sync/:id
 export const syncSteadfastStatusForOrder = createAsyncThunk(
   "/order/syncSteadfastStatusForOrder",
@@ -259,13 +272,11 @@ const adminOrderSlice = createSlice({
 
         const { id, totalAmount } = action.payload.meta || {};
 
-        // update details instantly so header updates without refetch
         if (state.orderDetails && state.orderDetails._id === id) {
           state.orderDetails.totalAmount = totalAmount;
           state.orderDetails.orderUpdateDate = new Date().toISOString();
         }
 
-        // update list instantly too
         state.orderList = (state.orderList || []).map((o) =>
           o._id === id
             ? {
@@ -297,7 +308,10 @@ const adminOrderSlice = createSlice({
 
         const updatedOrder = action?.payload?.data;
         if (updatedOrder?._id) {
-          if (state.orderDetails && state.orderDetails._id === updatedOrder._id) {
+          if (
+            state.orderDetails &&
+            state.orderDetails._id === updatedOrder._id
+          ) {
             state.orderDetails = updatedOrder;
           }
           state.orderList = (state.orderList || []).map((o) =>
@@ -329,7 +343,10 @@ const adminOrderSlice = createSlice({
         if (payloadData?._id) {
           const updatedOrder = payloadData;
 
-          if (state.orderDetails && state.orderDetails._id === updatedOrder._id) {
+          if (
+            state.orderDetails &&
+            state.orderDetails._id === updatedOrder._id
+          ) {
             state.orderDetails = updatedOrder;
           }
           state.orderList = (state.orderList || []).map((o) =>
@@ -361,6 +378,32 @@ const adminOrderSlice = createSlice({
         state.actionLoading = false;
         state.error =
           action?.payload?.message || "Failed to sync Steadfast status";
+      })
+
+      // -------------------------
+      // 🗑️ DELETE ORDER
+      // -------------------------
+      .addCase(deleteOrderForAdmin.pending, (state) => {
+        state.actionLoading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(deleteOrderForAdmin.fulfilled, (state, action) => {
+        state.actionLoading = false;
+        state.successMessage =
+          action?.payload?.message || "Order deleted successfully!";
+
+        const { id } = action.payload.meta || {};
+
+        state.orderList = (state.orderList || []).filter((o) => o._id !== id);
+
+        if (state.orderDetails && state.orderDetails._id === id) {
+          state.orderDetails = null;
+        }
+      })
+      .addCase(deleteOrderForAdmin.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action?.payload?.message || "Failed to delete order";
       });
   },
 });
