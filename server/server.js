@@ -15,7 +15,7 @@ import shopOrderRouter from "./routes/shop/order-routes.js";
 import shopSearchRouter from "./routes/shop/search-routes.js";
 import shopReviewRouter from "./routes/shop/review-routes.js";
 
-import commonFeatureRouter  from "./routes/common/feature-routes.js";
+import commonFeatureRouter from "./routes/common/feature-routes.js";
 
 dotenv.config();
 
@@ -27,10 +27,21 @@ mongoose
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://topsoundbd.com",
+  "https://www.topsoundbd.com",
+  "https://api.topsoundbd.com",
+];
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, cb) {
+      // allow requests with no origin (Postman, server-to-server)
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.includes(origin)) return cb(null, true);
+      return cb(new Error("Not allowed by CORS: " + origin));
+    },
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
@@ -40,8 +51,23 @@ app.use(
       "Pragma",
     ],
     credentials: true,
-  })
+  }),
 );
+
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST", "DELETE", "PUT"],
+//     allowedHeaders: [
+//       "Content-Type",
+//       "Authorization",
+//       "Cache-Control",
+//       "Expires",
+//       "Pragma",
+//     ],
+//     credentials: true,
+//   })
+// );
 
 app.use(cookieParser());
 app.use(express.json());
