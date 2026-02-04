@@ -69,8 +69,17 @@ app.use(
 //   })
 // );
 
+// middleware
 app.use(cookieParser());
 app.use(express.json());
+
+//root api
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "🚀 Your server is active and running",
+  });
+});
 
 //all api endpoints
 

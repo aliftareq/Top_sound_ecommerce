@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_BASE = "http://localhost:5000/api/admin/orders";
+import { http } from "@/lib/http";
 
 const initialState = {
   orderList: [],
@@ -17,7 +15,7 @@ export const getAllOrdersForAdmin = createAsyncThunk(
   "/order/getAllOrdersForAdmin",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/get`);
+      const response = await http.get(`/api/admin/orders/get`);
       return response.data;
     } catch (err) {
       return rejectWithValue(
@@ -31,7 +29,7 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
   "/order/getOrderDetailsForAdmin",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/details/${id}`);
+      const response = await http.get(`/api/admin/orders/details/${id}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(
@@ -47,7 +45,7 @@ export const deleteOrderForAdmin = createAsyncThunk(
   "/order/deleteOrderForAdmin",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${API_BASE}/delete/${id}`);
+      const response = await http.delete(`/api/admin/orders/delete/${id}`);
       return { ...response.data, meta: { id } };
     } catch (err) {
       return rejectWithValue(
@@ -61,7 +59,7 @@ export const updateOrderPrice = createAsyncThunk(
   "/order/updateOrderPrice",
   async ({ id, totalAmount }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_BASE}/update-price/${id}`, {
+      const response = await http.put(`/api/admin/orders/update-price/${id}`, {
         totalAmount,
       });
       return { ...response.data, meta: { id, totalAmount } };
@@ -77,7 +75,7 @@ export const updateOrderStatus = createAsyncThunk(
   "/order/updateOrderStatus",
   async ({ id, orderStatus }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_BASE}/update/${id}`, {
+      const response = await http.put(`/api/admin/orders/update/${id}`, {
         orderStatus,
       });
       return { ...response.data, meta: { id, orderStatus } };
@@ -93,7 +91,7 @@ export const updatePaymentStatus = createAsyncThunk(
   "/order/updatePaymentStatus",
   async ({ id, paymentStatus }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_BASE}/update-payment/${id}`, {
+      const response = await http.put(`/api/admin/orders/update-payment/${id}`, {
         paymentStatus,
       });
       return { ...response.data, meta: { id, paymentStatus } };
@@ -111,7 +109,7 @@ export const createSteadfastParcelForOrder = createAsyncThunk(
   "/order/createSteadfastParcelForOrder",
   async ({ id, recipient_name, delivery_type = 0 }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE}/steadfast/create/${id}`, {
+      const response = await http.post(`/api/admin/orders/steadfast/create/${id}`, {
         recipient_name,
         delivery_type,
       });
@@ -130,7 +128,7 @@ export const syncSteadfastStatusForOrder = createAsyncThunk(
   "/order/syncSteadfastStatusForOrder",
   async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE}/steadfast/sync/${id}`);
+      const response = await http.post(`/api/admin/orders/steadfast/sync/${id}`);
       return response.data; // expects {success, message, data:{...}} or {success, message, data: order}
     } catch (err) {
       return rejectWithValue(

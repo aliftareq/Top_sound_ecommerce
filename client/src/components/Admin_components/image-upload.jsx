@@ -2,11 +2,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useRef } from "react";
 import { FileIcon, UploadCloudIcon, XIcon, PlusIcon } from "lucide-react";
-import axios from "axios";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
+import { http } from "@/lib/http";
 
 const ProductImageUpload = ({
   // main image
@@ -50,8 +50,8 @@ const ProductImageUpload = ({
     const data = new FormData();
     data.append("my_file", file);
 
-    const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+    const response = await http.post(
+      "/api/admin/products/upload-image",
       data
     );
 
@@ -73,8 +73,8 @@ const ProductImageUpload = ({
     const data = new FormData();
     data.append("my_file", file);
 
-    const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+    const response = await http.post(
+      "/api/admin/products/upload-image",
       data
     );
 
