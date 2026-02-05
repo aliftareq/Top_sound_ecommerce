@@ -2,8 +2,8 @@
 
 **TopSoundBD** is a modern full-stack e-commerce web application focused on selling audio and sound system products in Bangladesh. The platform provides a smooth shopping experience for customers and powerful management tools for administrators.
 
-- **Live Site**: https://topsoundbd.com/
-- **Server API**: https://api.topsoundbd.com/
+- **Live Site**: <a href="https://topsoundbd.com/" target="_blank">https://topsoundbd.com/</a>
+- **Server API**: <a href="https://api.topsoundbd.com/" target="_blank">https://api.topsoundbd.com/</a>
 
 ---
 
@@ -45,23 +45,27 @@
 ## ⚙️ Technologies Used
 
 ### Frontend
+
 - React.js
 - Tailwind CSS
-- UI Component Library
+- ShadCn(UI Component Library)
 - Axios
 
 ### Backend
+
 - Node.js
 - Express.js
 - MongoDB
+- Cloudinary (for photo upload)
 
 ### Authentication & Security
+
 - JWT (JSON Web Tokens)
 - Secure API routes with role-based access
 
 ### Additional Tools & Libraries
+
 - React Hook Form
-- React Query / TanStack Query
 - Toast notifications
 - Date handling utilities
 
@@ -70,8 +74,14 @@
 ## 📦 API Overview
 
 The backend API powers:
+
 - Product CRUD operations
 - User authentication & authorization
 - Order processing
 - Admin-only protected routes
 
+## 📋 Summary
+
+**TopSoundBD** offers a robust and scalable solution for audio and sound system e-commerce, serving both customers and administrators effectively. With features such as product browsing, category filtering, secure authentication, shopping cart, order management, and admin controls, it ensures smooth operations and an excellent user experience.
+
+The integration of modern web technologies like React, Node.js, Express, MongoDB, and JWT enhances the platform’s performance, security, and reliability, making TopSoundBD a dependable solution for selling audio equipment online.
