@@ -150,38 +150,46 @@ const ShoppingListing = () => {
       <ProductFilter filters={filters} handleFilter={handleFilter} />
       <div className="bg-background w-full rounded-lg shadow-sm">
         <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="hidden md:block text-lg font-extrabold">
-            All Products
-          </h2>
-          <div className="flex items-center gap-3">
-            <span className="text-slate-900 font-extrabold">
-              Total Products : {productList?.length}
-            </span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
-                  <ArrowUpDownIcon className="h-4 w-4" />
-                  <span>Sort by</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px] bg-white">
-                <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
-                  {sortOptions.map((sortItem) => (
-                    <DropdownMenuRadioItem
-                      value={sortItem.id}
-                      key={sortItem.id}
-                      className="hover:cursor-pointer hover:underline"
-                    >
-                      {sortItem.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex w-full items-center justify-between">
+            {/* Left title (hidden on small) */}
+            <h2 className="hidden sm:block text-slate-900 font-extrabold text-lg">
+              All Products
+            </h2>
+            {/* Right area on large, full row on small */}
+            <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-3">
+              <span className="text-slate-900 font-extrabold whitespace-nowrap">
+                Total Products : {productList?.length}
+              </span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <ArrowUpDownIcon className="h-4 w-4" />
+                    <span>Sort by</span>
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-[200px] bg-white">
+                  <DropdownMenuRadioGroup
+                    value={sort}
+                    onValueChange={handleSort}
+                  >
+                    {sortOptions.map((sortItem) => (
+                      <DropdownMenuRadioItem
+                        value={sortItem.id}
+                        key={sortItem.id}
+                        className="hover:cursor-pointer hover:underline"
+                      >
+                        {sortItem.label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
