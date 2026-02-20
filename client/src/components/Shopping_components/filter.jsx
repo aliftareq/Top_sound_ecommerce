@@ -1,4 +1,3 @@
-
 import { filterOptions } from "@/config";
 import { Fragment } from "react";
 import { Label } from "../ui/label";
@@ -7,7 +6,7 @@ import { Separator } from "../ui/separator";
 
 const ProductFilter = ({ filters, handleFilter }) => {
   return (
-    <div className="bg-background rounded-lg shadow-sm">
+    <div className="hidden md:block bg-background rounded-lg shadow-sm">
       <div className="p-4 border-b">
         <h2 className="text-lg font-extrabold">Filters</h2>
       </div>
@@ -29,7 +28,7 @@ const ProductFilter = ({ filters, handleFilter }) => {
                       onCheckedChange={() => handleFilter(keyItem, option.id)}
                       className="border border-black data-[state=checked]:bg-black data-[state=checked]:text-white"
                     />
-                    {option.label} 
+                    {option.label}
                   </Label>
                 ))}
               </div>
@@ -40,6 +39,6 @@ const ProductFilter = ({ filters, handleFilter }) => {
       </div>
     </div>
   );
-}
+};
 
 export default ProductFilter;

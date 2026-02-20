@@ -46,7 +46,7 @@ const brandsWithIcon = [
 const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts
+    (state) => state.shopProducts,
   );
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
@@ -82,7 +82,7 @@ const ShoppingHome = () => {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-      })
+      }),
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
@@ -110,7 +110,7 @@ const ShoppingHome = () => {
       fetchAllFilteredProducts({
         filterParams: {},
         sortParams: "price-lowtohigh",
-      })
+      }),
     );
   }, [dispatch]);
 
@@ -122,18 +122,20 @@ const ShoppingHome = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[600px] overflow-hidden">
+      <div className="relative w-full aspect-video md:aspect-21/9 overflow-hidden bg-white">
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
               <img
                 src={slide?.image}
                 key={index}
+                alt=""
                 className={`${
                   index === currentSlide ? "opacity-100" : "opacity-0"
-                } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+                } absolute inset-0 w-full h-full object-contain lg:object-cover object-center transition-opacity duration-1000`}
               />
             ))
           : null}
+
         <Button
           variant="outline"
           size="icon"
@@ -141,22 +143,23 @@ const ShoppingHome = () => {
             setCurrentSlide(
               (prevSlide) =>
                 (prevSlide - 1 + featureImageList.length) %
-                featureImageList.length
+                featureImageList.length,
             )
           }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/80"
         >
           <ChevronLeftIcon className="w-4 h-4" />
         </Button>
+
         <Button
           variant="outline"
           size="icon"
           onClick={() =>
             setCurrentSlide(
-              (prevSlide) => (prevSlide + 1) % featureImageList.length
+              (prevSlide) => (prevSlide + 1) % featureImageList.length,
             )
           }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/80"
         >
           <ChevronRightIcon className="w-4 h-4" />
         </Button>
