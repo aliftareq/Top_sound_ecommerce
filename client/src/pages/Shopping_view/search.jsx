@@ -40,10 +40,7 @@ const SearchProducts = () => {
   }, [keyword]);
 
   const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
-    if (!user) {
-      toast.error("You must login first to add this item!!!");
-      navigate("/auth/login");
-    }
+    
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {

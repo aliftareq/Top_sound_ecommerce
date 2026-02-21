@@ -18,7 +18,7 @@ import {
   fetchAllFilteredProducts,
   fetchProductDetails,
 } from "@/store/shop/products-slice";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 import { toast } from "sonner";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -50,7 +50,6 @@ const ShoppingListing = () => {
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const navigate = useNavigate();
 
   const categorySearchParam = searchParams.get("category");
 
@@ -87,11 +86,6 @@ const ShoppingListing = () => {
   };
 
   const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
-    if (!user) {
-      toast.error("You must login first to add this item!!!");
-      navigate("/auth/login");
-    }
-
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -146,7 +140,7 @@ const ShoppingListing = () => {
   }, [productDetails]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filters={filters} handleFilter={handleFilter} />
       <div className="bg-background w-full rounded-lg shadow-sm">
         <div className="p-4 border-b flex items-center justify-between">

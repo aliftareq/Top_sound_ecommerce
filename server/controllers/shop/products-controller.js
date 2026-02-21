@@ -79,4 +79,32 @@ const getProductDetails = async (req, res) => {
   }
 };
 
-export { getFilteredProducts, getProductDetails };
+const getProductsByIds = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || !ids.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ids array",
+      });
+    }
+
+    const products = await Product.find({
+      _id: { $in: ids },
+    });
+
+    res.status(200).json({
+      success: true,
+      data: products,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occurred",
+    });
+  }
+};
+
+export { getFilteredProducts, getProductDetails, getProductsByIds };

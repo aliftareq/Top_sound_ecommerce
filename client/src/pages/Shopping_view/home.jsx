@@ -73,10 +73,7 @@ const ShoppingHome = () => {
   };
 
   const handleAddtoCart = (getCurrentProductId) => {
-    if (!user) {
-      toast.error("You must login first to add this item!!!");
-      navigate("/auth/login");
-    }
+   
     dispatch(
       addToCart({
         userId: user?.id,
