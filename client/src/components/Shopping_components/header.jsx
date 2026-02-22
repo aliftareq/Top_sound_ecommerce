@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Speaker, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
+import { Speaker, LogOut, ShoppingCart, UserCog } from "lucide-react";
 import {
   Link,
   useLocation,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { shoppingViewHeaderMenuItems } from "@/config";
@@ -43,7 +43,9 @@ const MenuItems = () => {
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 
     location.pathname.includes("listing") && currentFilter !== null
-      ? setSearchParams(new URLSearchParams(`?category=${getCurrentMenuItem.id}`))
+      ? setSearchParams(
+          new URLSearchParams(`?category=${getCurrentMenuItem.id}`),
+        )
       : navigate(getCurrentMenuItem.path);
   }
 
@@ -77,19 +79,18 @@ const HeaderRightContent = () => {
     dispatch(logoutUser());
   };
 
-  // ✅ load correct cart depending on auth
   useEffect(() => {
     if (isLoggedIn) dispatch(fetchCartItems(user.id));
     else dispatch(loadGuestCart());
   }, [dispatch, isLoggedIn, user?.id]);
 
-  // ✅ badge count should depend on auth
   const cartCount = isLoggedIn
-    ? (cartItems?.items?.length || 0)
-    : (guestCart?.items?.length || 0);
+    ? cartItems?.items?.length || 0
+    : guestCart?.items?.length || 0;
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4 pl-6">
+      {/* Cart drawer (desktop) */}
       <Sheet open={openCartSheet} onOpenChange={setOpenCartSheet}>
         <Button
           onClick={() => setOpenCartSheet(true)}
@@ -108,7 +109,7 @@ const HeaderRightContent = () => {
           setOpenCartSheet={setOpenCartSheet}
           isLoggedIn={isLoggedIn}
           dbCartItems={cartItems?.items || []}
-          guestCartItems={guestCart?.items || []} // [{productId, quantity}]
+          guestCartItems={guestCart?.items || []}
         />
       </Sheet>
 
@@ -154,9 +155,6 @@ const HeaderRightContent = () => {
 
 const ShoppingHeader = () => {
   const { user } = useSelector((state) => state.auth);
-  const { cartItems, guestCart } = useSelector((state) => state.shopCart);
-
-  const [openCartSheet, setOpenCartSheet] = useState(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -167,59 +165,23 @@ const ShoppingHeader = () => {
     else dispatch(loadGuestCart());
   }, [dispatch, isLoggedIn, user?.id]);
 
-  const cartCount = isLoggedIn
-    ? (cartItems?.items?.length || 0)
-    : (guestCart?.items?.length || 0);
-
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
+        {/* Brand always visible */}
         <Link to="/" className="flex items-center gap-2">
           <Speaker className="h-6 w-6" />
           <span className="font-bold">{t("brand.name")}</span>
         </Link>
 
-        {/* cart-icon in mobi-screen */}
-        <Sheet open={openCartSheet} onOpenChange={setOpenCartSheet}>
-          <Button
-            onClick={() => setOpenCartSheet(true)}
-            variant="outline"
-            size="icon"
-            className="relative md:hidden"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            <span className="absolute top-[-5px] right-0.5 font-bold text-sm">
-              {cartCount}
-            </span>
-            <span className="sr-only">{t("sr.userCart")}</span>
-          </Button>
-
-          <UserCartWrapper
-            setOpenCartSheet={setOpenCartSheet}
-            isLoggedIn={isLoggedIn}
-            dbCartItems={cartItems?.items || []}
-            guestCartItems={guestCart?.items || []}
-          />
-        </Sheet>
-
-        {/* menu in mobi-screen */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle header menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-full max-w-xs">
-            <MenuItems />
-            <HeaderRightContent />
-          </SheetContent>
-        </Sheet>
-
-        <div className="hidden lg:block">
-          <MenuItems />
+        {/* ✅ Mobile/Tablet: Language toggle only (replaces old menu icon) */}
+        <div className="lg:hidden">
+          <LanguageToggle />
         </div>
-        <div className="hidden lg:block">
+
+        {/* ✅ Desktop (lg+): keep everything as before */}
+        <div className="hidden lg:flex lg:items-center lg:gap-6">
+          <MenuItems />
           <HeaderRightContent />
         </div>
       </div>
