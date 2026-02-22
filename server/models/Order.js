@@ -19,6 +19,7 @@ const OrderSchema = new Schema({
   ],
   addressInfo: {
     addressId: String,
+    name: String,
     fullAddress: String,
     district: String,
     thana: String,

@@ -24,6 +24,7 @@ const AddressCard = ({
       variant="submit"
     >
       <CardContent className="grid p-4 gap-4">
+        <Label>Name: {addressInfo?.name}</Label>
         <Label>Full-Address: {addressInfo?.fullAddress}</Label>
         <Label>Thana: {addressInfo?.thana}</Label>
         <Label>District: {addressInfo?.district}</Label>

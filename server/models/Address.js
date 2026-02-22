@@ -7,6 +7,11 @@ const AddressSchema = new Schema(
       required: true,
       index: true,
     },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     fullAddress: {
       type: String,
       required: true,

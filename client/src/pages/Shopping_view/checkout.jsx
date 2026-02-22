@@ -1,12 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Address from "@/components/Shopping_components/address";
 import img from "../../assets/account.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/Shopping_components/cart-items-content";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { http } from "@/lib/http";
+import { loadGuestCart, clearGuestCart } from "@/store/shop/cart-slice";
+import {
+  loadGuestAddresses,
+  clearGuestAddresses,
+} from "@/store/shop/address-slice";
 
 const DELIVERY_OPTIONS = [
   { id: "inside_dhaka", label: "Inside Dhaka", charge: 120 },
@@ -14,11 +21,8 @@ const DELIVERY_OPTIONS = [
 ];
 
 const ShoppingCheckout = () => {
-  const { cartItems } = useSelector((state) => state.shopCart);
+  const { cartItems, guestCart } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  const { orderDetails } = useSelector((state) => state.shopOrder);
-
-  console.log(orderDetails);
 
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
   const [isOrderStart, setIsOrderStart] = useState(false);
@@ -27,46 +31,145 @@ const ShoppingCheckout = () => {
     DELIVERY_OPTIONS[0].id,
   );
 
+  // ✅ Guest hydrated items (full product info + quantity)
+  const [guestFullItems, setGuestFullItems] = useState([]);
+  const [guestLoading, setGuestLoading] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const isLoggedIn = Boolean(user?.id);
+
+  // ✅ Load guest cart + guest address on refresh (guest only)
+  useEffect(() => {
+    if (!isLoggedIn) {
+      dispatch(loadGuestCart());
+      dispatch(loadGuestAddresses());
+    }
+  }, [isLoggedIn, dispatch]);
+
+  // =========================
+  // Guest hydration (only by ids change)
+  // =========================
+  const guestCartItems = guestCart?.items || []; // [{productId, quantity}]
+
+  const guestProductIdsKey = useMemo(() => {
+    return guestCartItems
+      .map((i) => i.productId)
+      .sort()
+      .join(",");
+  }, [guestCartItems]);
+
+  // keep quantities synced without refetch
+  useEffect(() => {
+    if (isLoggedIn) return;
+    if (!guestCartItems.length) {
+      setGuestFullItems([]);
+      return;
+    }
+
+    setGuestFullItems((prev) => {
+      if (!prev?.length) return prev;
+
+      const qtyMap = new Map(
+        guestCartItems.map((g) => [g.productId, g.quantity]),
+      );
+
+      return prev
+        .filter((p) => qtyMap.has(p.productId))
+        .map((p) => ({ ...p, quantity: qtyMap.get(p.productId) }));
+    });
+  }, [isLoggedIn, guestCartItems]);
+
+  // fetch products only on add/remove
+  useEffect(() => {
+    const hydrateGuest = async () => {
+      if (isLoggedIn) return;
+
+      if (!guestCartItems.length) {
+        setGuestFullItems([]);
+        return;
+      }
+
+      try {
+        setGuestLoading(true);
+
+        const ids = guestCartItems.map((g) => g.productId);
+        const res = await http.post("/api/shop/products/get-by-ids", { ids });
+        const products = res?.data?.data || [];
+
+        const qtyMap = new Map(
+          guestCartItems.map((g) => [g.productId, g.quantity]),
+        );
+
+        const merged = products.map((p) => ({
+          ...p,
+          productId: p._id,
+          quantity: qtyMap.get(p._id) || 1,
+        }));
+
+        setGuestFullItems(merged);
+      } catch (e) {
+        console.log(e);
+        setGuestFullItems([]);
+      } finally {
+        setGuestLoading(false);
+      }
+    };
+
+    hydrateGuest();
+  }, [isLoggedIn, guestProductIdsKey]);
+
+  // =========================
+  // Choose items for checkout UI
+  // =========================
+  const checkoutItems = isLoggedIn ? cartItems?.items || [] : guestFullItems;
+
+  // =========================
+  // Totals
+  // =========================
   const itemsTotal = useMemo(() => {
-    return cartItems && cartItems.items && cartItems.items.length > 0
-      ? cartItems.items.reduce(
-          (sum, currentItem) =>
-            sum +
-            (currentItem?.offerPrice > 0
-              ? currentItem?.offerPrice
-              : currentItem?.price) *
-              currentItem?.quantity,
-          0,
-        )
-      : 0;
-  }, [cartItems]);
+    if (!checkoutItems?.length) return 0;
+
+    return checkoutItems.reduce((sum, currentItem) => {
+      const unitPrice =
+        currentItem?.offerPrice > 0
+          ? currentItem.offerPrice
+          : currentItem.price;
+
+      return sum + Number(unitPrice || 0) * Number(currentItem?.quantity || 0);
+    }, 0);
+  }, [checkoutItems]);
 
   const deliveryCharge = useMemo(() => {
     const found = DELIVERY_OPTIONS.find((o) => o.id === selectedDelivery);
     return found ? found.charge : 0;
   }, [selectedDelivery]);
 
-  const totalCartAmount = useMemo(() => {
-    return itemsTotal + deliveryCharge;
-  }, [itemsTotal, deliveryCharge]);
+  const totalCartAmount = useMemo(
+    () => itemsTotal + deliveryCharge,
+    [itemsTotal, deliveryCharge],
+  );
 
+  // =========================
+  // Create order
+  // =========================
   const handleInitiateOrder = () => {
-    if (!cartItems?.items || cartItems?.items?.length === 0) {
+    if (!checkoutItems?.length) {
       toast.error("Your cart is empty. Please add items to proceed");
       return;
     }
+
     if (currentSelectedAddress === null) {
       toast.error("Please select one address to proceed.");
       return;
     }
 
     const orderData = {
-      userId: user?.id,
-      cartId: cartItems?._id,
-      cartItems: cartItems.items.map((singleCartItem) => ({
+      userId: isLoggedIn ? user.id : null,
+      cartId: isLoggedIn ? cartItems?._id : null,
+
+      cartItems: checkoutItems.map((singleCartItem) => ({
         productId: singleCartItem?.productId,
         title: singleCartItem?.title,
         mainImage: singleCartItem?.mainImage,
@@ -76,8 +179,10 @@ const ShoppingCheckout = () => {
             : singleCartItem?.price,
         quantity: singleCartItem?.quantity,
       })),
+
       addressInfo: {
         addressId: currentSelectedAddress?._id,
+        name: currentSelectedAddress?.name,
         fullAddress: currentSelectedAddress?.fullAddress,
         district: currentSelectedAddress?.district,
         thana: currentSelectedAddress?.thana,
@@ -88,10 +193,7 @@ const ShoppingCheckout = () => {
       orderStatus: "pending",
       paymentMethod: "Cash On Delivery",
       paymentStatus: "pending",
-
-      // Total includes delivery charge
       totalAmount: totalCartAmount,
-
       orderDate: new Date(),
       orderUpdateDate: new Date(),
     };
@@ -101,6 +203,14 @@ const ShoppingCheckout = () => {
     dispatch(createNewOrder(orderData)).then((action) => {
       if (action?.payload?.success) {
         toast.success("Order created successfully!");
+
+        // ✅ IMPORTANT: clear guest local data after successful order
+        if (!isLoggedIn) {
+          dispatch(clearGuestCart());
+          dispatch(clearGuestAddresses());
+          setCurrentSelectedAddress(null);
+        }
+
         navigate("/shop/orderDetails");
       } else {
         toast.error("Failed to create order!");
@@ -126,16 +236,17 @@ const ShoppingCheckout = () => {
         />
 
         <div className="flex flex-col gap-4">
-          {cartItems && cartItems.items && cartItems.items.length > 0
-            ? cartItems.items.map((item) => (
-                <UserCartItemsContent
-                  key={item?.productId || item?._id}
-                  cartItem={item}
-                />
-              ))
-            : null}
+          {!isLoggedIn && guestLoading ? (
+            <p className="font-medium">Loading cart...</p>
+          ) : checkoutItems.length > 0 ? (
+            checkoutItems.map((item) => (
+              <UserCartItemsContent
+                key={item?.productId || item?._id}
+                cartItem={item}
+              />
+            ))
+          ) : null}
 
-          {/* ✅ Delivery options section */}
           <div className="mt-4 rounded-lg border p-4 space-y-3">
             <p className="font-semibold">Delivery Options</p>
 

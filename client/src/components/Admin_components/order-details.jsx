@@ -12,7 +12,7 @@ import {
   getOrderDetailsForAdmin,
   updateOrderStatus,
   updatePaymentStatus,
-  updateOrderPrice, 
+  updateOrderPrice,
   createSteadfastParcelForOrder,
   syncSteadfastStatusForOrder,
 } from "@/store/admin/order-slice";
@@ -22,7 +22,7 @@ import { Phone } from "lucide-react";
 const initialFormData = {
   status: "",
   paymentStatus: "",
-  orderPrice: "", 
+  orderPrice: "",
   recipient_name: "",
 };
 
@@ -68,7 +68,7 @@ function AdminOrderDetailsView({ orderDetails }) {
 
   const hasSteadfast = useMemo(
     () => !!orderDetails?.steadfast?.trackingCode,
-    [orderDetails]
+    [orderDetails],
   );
 
   const courierStatus = orderDetails?.steadfast?.deliveryStatus;
@@ -86,7 +86,11 @@ function AdminOrderDetailsView({ orderDetails }) {
 
   // ✅ Auto-fill Order Price when dialog opens / order changes
   useEffect(() => {
-    if (orderDetails?._id && orderDetails?.totalAmount !== undefined && orderDetails?.totalAmount !== null) {
+    if (
+      orderDetails?._id &&
+      orderDetails?.totalAmount !== undefined &&
+      orderDetails?.totalAmount !== null
+    ) {
       setFormData((prev) => ({
         ...prev,
         orderPrice: String(orderDetails.totalAmount),
@@ -119,20 +123,20 @@ function AdminOrderDetailsView({ orderDetails }) {
       return;
     }
 
-    dispatch(updateOrderPrice({ id: orderDetails?._id, totalAmount: price })).then(
-      (data) => {
-        if (data?.payload?.success) {
-          // ✅ refresh so header Order Price updates immediately
-          dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-          dispatch(getAllOrdersForAdmin());
-          toast.success(data?.payload?.message || "Order price updated!");
-        } else if (data?.payload?.message) {
-          toast.error(data?.payload?.message);
-        } else {
-          toast.error("Failed to update order price");
-        }
+    dispatch(
+      updateOrderPrice({ id: orderDetails?._id, totalAmount: price }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        // ✅ refresh so header Order Price updates immediately
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrdersForAdmin());
+        toast.success(data?.payload?.message || "Order price updated!");
+      } else if (data?.payload?.message) {
+        toast.error(data?.payload?.message);
+      } else {
+        toast.error("Failed to update order price");
       }
-    );
+    });
   };
 
   // Order Status update (your existing select)
@@ -140,18 +144,18 @@ function AdminOrderDetailsView({ orderDetails }) {
     event.preventDefault();
     const { status } = formData;
 
-    dispatch(updateOrderStatus({ id: orderDetails?._id, orderStatus: status })).then(
-      (data) => {
-        if (data?.payload?.success) {
-          dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-          dispatch(getAllOrdersForAdmin());
-          setFormData((prev) => ({ ...prev, status: "" }));
-          toast.success(data?.payload?.message);
-        } else if (data?.payload?.message) {
-          toast.error(data?.payload?.message);
-        }
+    dispatch(
+      updateOrderStatus({ id: orderDetails?._id, orderStatus: status }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrdersForAdmin());
+        setFormData((prev) => ({ ...prev, status: "" }));
+        toast.success(data?.payload?.message);
+      } else if (data?.payload?.message) {
+        toast.error(data?.payload?.message);
       }
-    );
+    });
   };
 
   // Payment Status update
@@ -159,47 +163,47 @@ function AdminOrderDetailsView({ orderDetails }) {
     event.preventDefault();
     const { paymentStatus } = formData;
 
-    dispatch(updatePaymentStatus({ id: orderDetails?._id, paymentStatus })).then(
-      (data) => {
-        if (data?.payload?.success) {
-          dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-          dispatch(getAllOrdersForAdmin());
-          setFormData((prev) => ({ ...prev, paymentStatus: "" }));
-          toast.success(data?.payload?.message);
-        } else if (data?.payload?.message) {
-          toast.error(data?.payload?.message);
-        }
+    dispatch(
+      updatePaymentStatus({ id: orderDetails?._id, paymentStatus }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrdersForAdmin());
+        setFormData((prev) => ({ ...prev, paymentStatus: "" }));
+        toast.success(data?.payload?.message);
+      } else if (data?.payload?.message) {
+        toast.error(data?.payload?.message);
       }
-    );
+    });
   };
 
   // ✅ Quick confirm / reject buttons (user-friendly)
   const handleQuickConfirm = () => {
-    dispatch(updateOrderStatus({ id: orderDetails?._id, orderStatus: "confirmed" })).then(
-      (data) => {
-        if (data?.payload?.success) {
-          dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-          dispatch(getAllOrdersForAdmin());
-          toast.success("Order confirmed!");
-        } else {
-          toast.error(data?.payload?.message || "Failed to confirm");
-        }
+    dispatch(
+      updateOrderStatus({ id: orderDetails?._id, orderStatus: "confirmed" }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrdersForAdmin());
+        toast.success("Order confirmed!");
+      } else {
+        toast.error(data?.payload?.message || "Failed to confirm");
       }
-    );
+    });
   };
 
   const handleQuickReject = () => {
-    dispatch(updateOrderStatus({ id: orderDetails?._id, orderStatus: "rejected" })).then(
-      (data) => {
-        if (data?.payload?.success) {
-          dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-          dispatch(getAllOrdersForAdmin());
-          toast.success("Order rejected!");
-        } else {
-          toast.error(data?.payload?.message || "Failed to reject");
-        }
+    dispatch(
+      updateOrderStatus({ id: orderDetails?._id, orderStatus: "rejected" }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrdersForAdmin());
+        toast.success("Order rejected!");
+      } else {
+        toast.error(data?.payload?.message || "Failed to reject");
       }
-    );
+    });
   };
 
   // ✅ Create steadfast parcel
@@ -214,7 +218,7 @@ function AdminOrderDetailsView({ orderDetails }) {
         id: orderDetails?._id,
         recipient_name: formData.recipient_name.trim(),
         delivery_type: 0,
-      })
+      }),
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(getOrderDetailsForAdmin(orderDetails?._id));
@@ -228,15 +232,17 @@ function AdminOrderDetailsView({ orderDetails }) {
 
   // ✅ Sync steadfast status
   const handleSyncSteadfast = () => {
-    dispatch(syncSteadfastStatusForOrder({ id: orderDetails?._id })).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
-        dispatch(getAllOrdersForAdmin());
-        toast.success(data?.payload?.message || "Status synced!");
-      } else {
-        toast.error(data?.payload?.message || "Sync failed");
-      }
-    });
+    dispatch(syncSteadfastStatusForOrder({ id: orderDetails?._id })).then(
+      (data) => {
+        if (data?.payload?.success) {
+          dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+          dispatch(getAllOrdersForAdmin());
+          toast.success(data?.payload?.message || "Status synced!");
+        } else {
+          toast.error(data?.payload?.message || "Sync failed");
+        }
+      },
+    );
   };
 
   const handleCopyTracking = async () => {
@@ -248,7 +254,8 @@ function AdminOrderDetailsView({ orderDetails }) {
     }
   };
 
-  const canCreateParcel = orderDetails?.orderStatus === "confirmed" && !hasSteadfast;
+  const canCreateParcel =
+    orderDetails?.orderStatus === "confirmed" && !hasSteadfast;
 
   // ✅ clickable tel: (sanitize just in case)
   const phoneRaw = orderDetails?.addressInfo?.phone || "";
@@ -271,14 +278,18 @@ function AdminOrderDetailsView({ orderDetails }) {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                disabled={actionLoading || orderDetails?.orderStatus === "confirmed"}
+                disabled={
+                  actionLoading || orderDetails?.orderStatus === "confirmed"
+                }
                 onClick={handleQuickConfirm}
               >
                 Confirm
               </Button>
               <Button
                 variant="outline"
-                disabled={actionLoading || orderDetails?.orderStatus === "rejected"}
+                disabled={
+                  actionLoading || orderDetails?.orderStatus === "rejected"
+                }
                 onClick={handleQuickReject}
               >
                 Reject
@@ -288,7 +299,9 @@ function AdminOrderDetailsView({ orderDetails }) {
 
           <div className="flex mt-4 items-center justify-between">
             <p className="font-medium">Order ID</p>
-            <Label className="max-w-[380px] truncate">{orderDetails?._id}</Label>
+            <Label className="max-w-[380px] truncate">
+              {orderDetails?._id}
+            </Label>
           </div>
 
           <div className="flex mt-2 items-center justify-between">
@@ -327,7 +340,7 @@ function AdminOrderDetailsView({ orderDetails }) {
             <Label>
               <Badge
                 className={`py-1 px-3 text-white ${getOrderBadgeClass(
-                  orderDetails?.orderStatus
+                  orderDetails?.orderStatus,
                 )}`}
               >
                 {orderDetails?.orderStatus}
@@ -366,7 +379,11 @@ function AdminOrderDetailsView({ orderDetails }) {
                 <span className="text-sm font-medium">Tracking Code</span>
                 <div className="flex items-center gap-2">
                   <span className="text-sm">{trackingCode}</span>
-                  <Button variant="outline" size="sm" onClick={handleCopyTracking}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopyTracking}
+                  >
                     Copy
                   </Button>
                 </div>
@@ -376,7 +393,7 @@ function AdminOrderDetailsView({ orderDetails }) {
                 <span className="text-sm font-medium">Delivery Status</span>
                 <Badge
                   className={`py-1 px-3 text-white ${getCourierBadgeClass(
-                    courierStatus
+                    courierStatus,
                   )}`}
                 >
                   {courierStatus || "unknown"}
@@ -387,7 +404,9 @@ function AdminOrderDetailsView({ orderDetails }) {
                 <span className="text-sm font-medium">Last Sync</span>
                 <span className="text-sm text-muted-foreground">
                   {orderDetails?.steadfast?.lastSyncAt
-                    ? new Date(orderDetails.steadfast.lastSyncAt).toLocaleString()
+                    ? new Date(
+                        orderDetails.steadfast.lastSyncAt,
+                      ).toLocaleString()
                     : "—"}
                 </span>
               </div>
@@ -409,7 +428,8 @@ function AdminOrderDetailsView({ orderDetails }) {
                   }
                 />
                 <p className="text-xs text-muted-foreground">
-                  You can later store this in addressInfo to avoid typing every time.
+                  You can later store this in addressInfo to avoid typing every
+                  time.
                 </p>
               </div>
 
@@ -464,7 +484,11 @@ function AdminOrderDetailsView({ orderDetails }) {
         <div className="grid gap-2">
           <div className="font-medium">Shipping Info</div>
           <div className="grid gap-0.5 text-black">
-            <span>{orderDetails?.userId?.userName}</span>
+            {orderDetails?.userId?.userName ? (
+              <span>{orderDetails?.userId?.userName}</span>
+            ) : (
+              <span>{orderDetails?.addressInfo?.name},</span>
+            )}
             <span>{orderDetails?.addressInfo?.fullAddress},</span>
             <span>{orderDetails?.addressInfo?.thana},</span>
             <span>{orderDetails?.addressInfo?.district},</span>

@@ -50,6 +50,10 @@ function App() {
           <Route path="/shop/listing" element={<ShoppingListing />} />
           <Route path="/shop/search" element={<SearchProducts />} />
           <Route path="/shop/checkout" element={<ShoppingCheckout />} />
+          <Route
+            path="/shop/orderDetails"
+            element={<ShoppingOrderDetailsPage />}
+          />
         </Route>
         {/* <Route path="/shop/listing" element={<ShoppingListing />} /> */}
         {/* auth routes  */}
@@ -89,7 +93,6 @@ function App() {
         >
           <Route path="home" element={<ShoppingHome />} />
           <Route path="account" element={<ShoppingAccount />} />
-          <Route path="orderDetails" element={<ShoppingOrderDetailsPage />} />
         </Route>
         {/* not found page  */}
         <Route path="*" element={<NotFoundPage />}></Route>
