@@ -158,6 +158,7 @@ import {
 } from "@/store/shop/address-slice";
 import AddressCard from "./address-card";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const initialAddressFormData = {
   name: "",
@@ -169,6 +170,7 @@ const initialAddressFormData = {
 };
 
 const Address = ({ setCurrentSelectedAddress, selectedId }) => {
+   const { t } = useTranslation();
   const [formData, setFormData] = useState(initialAddressFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
 
@@ -303,7 +305,7 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
 
       <CardHeader>
         <CardTitle>
-          {currentEditedId !== null ? "Edit Address" : "Add New Address"}
+          {currentEditedId !== null ? t("address.text2") : t("address.text1")}
         </CardTitle>
       </CardHeader>
 
@@ -312,7 +314,7 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
           formControls={addressFormControls}
           formData={formData}
           setFormData={setFormData}
-          buttonText={currentEditedId !== null ? "Edit" : "Add"}
+          buttonText={currentEditedId !== null ? t("btn.edit") : t("btn.add")}
           onSubmit={handleManageAddress}
           isBtnDisabled={!isFormValid()}
         />

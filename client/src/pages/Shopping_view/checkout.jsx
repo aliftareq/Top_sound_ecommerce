@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Address from "@/components/Shopping_components/address";
-import img from "../../assets/account.jpg";
+import img from "../../assets/website-banner.jpeg";
 import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/Shopping_components/cart-items-content";
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,15 @@ import {
   loadGuestAddresses,
   clearGuestAddresses,
 } from "@/store/shop/address-slice";
+import { useTranslation } from "react-i18next";
 
 const DELIVERY_OPTIONS = [
-  { id: "inside_dhaka", label: "Inside Dhaka", charge: 120 },
-  { id: "outside_dhaka", label: "Out of Dhaka", charge: 150 },
+  { id: "inside_dhaka", label: "delivery.inside", charge: 120 },
+  { id: "outside_dhaka", label: "delivery.outside", charge: 150 },
 ];
 
 const ShoppingCheckout = () => {
+  const { t } = useTranslation();
   const { cartItems, guestCart } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
 
@@ -221,11 +223,11 @@ const ShoppingCheckout = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="relative h-[300px] w-full overflow-hidden">
+      <div className="relative h-[300px] lg:h-[500px] w-full overflow-hidden">
         <img
           src={img}
           alt="Checkout"
-          className="h-full w-full object-cover object-center"
+          className="h-full w-full lg:h-[500px] object-center"
         />
       </div>
 
@@ -248,7 +250,7 @@ const ShoppingCheckout = () => {
           ) : null}
 
           <div className="mt-4 rounded-lg border p-4 space-y-3">
-            <p className="font-semibold">Delivery Options</p>
+            <p className="font-semibold">{t("delivery.text1")}</p>
 
             {DELIVERY_OPTIONS.map((opt) => (
               <label
@@ -263,7 +265,7 @@ const ShoppingCheckout = () => {
                     checked={selectedDelivery === opt.id}
                     onChange={() => setSelectedDelivery(opt.id)}
                   />
-                  <span>{opt.label}</span>
+                  <span>{t(opt.label)}</span>
                 </div>
                 <span className="font-medium">৳{opt.charge}</span>
               </label>
@@ -272,17 +274,19 @@ const ShoppingCheckout = () => {
 
           <div className="mt-4 space-y-3">
             <div className="flex justify-between">
-              <span className="font-medium">Items Total</span>
+              <span className="font-medium">{t("checkout.itemtotal")}</span>
               <span className="font-medium">৳{itemsTotal}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="font-medium">Delivery Charge</span>
+              <span className="font-medium">
+                {t("checkout.deliverycharge")}
+              </span>
               <span className="font-medium">৳{deliveryCharge}</span>
             </div>
 
             <div className="flex justify-between border-t pt-3">
-              <span className="font-bold">Grand Total</span>
+              <span className="font-bold">{t("checkout.grandtotal")}</span>
               <span className="font-bold">৳{totalCartAmount}</span>
             </div>
           </div>
@@ -294,7 +298,7 @@ const ShoppingCheckout = () => {
               className="w-full"
               disabled={isOrderStart}
             >
-              {isOrderStart ? "Processing Your Order..." : "Confirm order"}
+              {isOrderStart ? t("btn.process") : t("btn.confirm")}
             </Button>
           </div>
         </div>

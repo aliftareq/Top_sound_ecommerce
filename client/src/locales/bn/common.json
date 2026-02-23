@@ -25,6 +25,12 @@
   "btn.order": "অর্ডার করুন",
   "btn.submit": "সাবমিট করুন",
   "btn.seeAll": "সকল অফার দেখুন",
+  "btn.edit": "সংশোধন করুন",
+  "btn.add": "সংযুক্ত করুন",
+  "btn.delete": "ডিলিট করুন",
+  "btn.select": "সিলেক্ট করুন",
+  "btn.confirm": "অর্ডার নিশ্চিত করুন",
+  "btn.process": "অর্ডার টি কনফার্ম হচ্ছে...",
 
   "brand.name": "টপ সাউন্ড টেকনোলজি",
   "header.loggedInAs": "লগইন আছেন",
@@ -44,5 +50,22 @@
   "login.phoneNo": "ফোন নম্বর",
   "login.password": "পাসওয়ার্ড",
   "login.placeholderPhone": "আপনার মোবাইল নম্বর লিখুন",
-  "login.placeholderPassword": "আপনার পাসওয়ার্ড লিখুন"
+  "login.placeholderPassword": "আপনার পাসওয়ার্ড লিখুন",
+
+  "address.name": "নাম",
+  "address.fulladdress": "পূর্ণ-ঠিকানা",
+  "address.thana": "থানা",
+  "address.district": "জেলা",
+  "address.phone": "ফোন নম্বর",
+  "address.notes": "মতামত",
+  "address.text1": "আপনার ঠিকানা লিখুন",
+  "address.text2": "ঠিকানা সংশোধন করুন",
+
+  "delivery.text1": "ডেলিভারি অপশন",
+  "delivery.inside": "ঢাকার অভ্যন্তরে",
+  "delivery.outside": "ঢাকার বাহিরে",
+
+  "checkout.itemtotal": "পণ্যের দাম",
+  "checkout.deliverycharge": "ডেলিভারি চার্জ",
+  "checkout.grandtotal": "সর্বমোট খরচ"
 }

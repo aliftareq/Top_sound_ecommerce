@@ -25,6 +25,12 @@
   "btn.order": "Order",
   "btn.submit": "Submit",
   "btn.seeAll": "See All",
+  "btn.edit": "Edit",
+  "btn.add": "Add",
+  "btn.delete": "Delete",
+  "btn.select": "Select",
+  "btn.confirm": "Confirm order",
+  "btn.process": "Processing Your Order...",
 
   "brand.name": "Top Sound Technology",
   "header.loggedInAs": "Logged in as",
@@ -44,5 +50,22 @@
   "login.phoneNo":"Phone Number",
   "login.password":"Password",
   "login.placeholderPhone":"Enter your mobile number",
-  "login.placeholderPassword":"Enter your password"
+  "login.placeholderPassword":"Enter your password",
+
+  "address.name": "Name",
+  "address.fulladdress": "Full-Address",
+  "address.thana": "Thana",
+  "address.district": "District",
+  "address.phone": "Phone",
+  "address.notes": "Notes",
+  "address.text1": "Add New Address",
+  "address.text2": "Edit Address",
+
+  "delivery.text1": "Delivery Options",
+  "delivery.inside": "Inside Dhaka",
+  "delivery.outside": "Out of Dhaka",
+
+  "checkout.itemtotal": "Items Total",
+  "checkout.deliverycharge": "Delivery Charge",
+  "checkout.grandtotal": "GrandTotal"
 }

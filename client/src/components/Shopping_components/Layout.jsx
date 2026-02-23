@@ -17,24 +17,6 @@ function ShoppingLayout() {
       <div className="lg:hidden">
         <MobileBottomNav />
       </div>
-
-      {/* ✅ WhatsApp Floating Button (no text, mobile + md only) */}
-      <a
-        href="https://wa.me/8801632779455"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-28 right-4 
-                   bg-green-500 hover:bg-green-600
-                   w-14 h-14 
-                   rounded-full 
-                   flex items-center justify-center 
-                   shadow-xl 
-                   z-9999
-                   hover:scale-110 
-                   transition-all duration-300"
-      >
-        <FaWhatsapp className="text-white" size={28} />
-      </a>
     </div>
   );
 }

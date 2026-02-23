@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Label } from "../ui/label";
@@ -9,6 +10,7 @@ const AddressCard = ({
   setCurrentSelectedAddress,
   selectedId,
 }) => {
+  const { t } = useTranslation();
   return (
     <Card
       onClick={
@@ -24,12 +26,12 @@ const AddressCard = ({
       variant="submit"
     >
       <CardContent className="grid p-4 gap-4">
-        <Label>Name: {addressInfo?.name}</Label>
-        <Label>Full-Address: {addressInfo?.fullAddress}</Label>
-        <Label>Thana: {addressInfo?.thana}</Label>
-        <Label>District: {addressInfo?.district}</Label>
-        <Label>Phone: {addressInfo?.phone}</Label>
-        <Label>Notes: {addressInfo?.notes}</Label>
+        <Label> {t("address.name")}: {addressInfo?.name}</Label>
+        <Label>{t("address.fulladdress")}: {addressInfo?.fullAddress}</Label>
+        <Label>{t("address.thana")}: {addressInfo?.thana}</Label>
+        <Label>{t("address.district")}: {addressInfo?.district}</Label>
+        <Label>{t("address.phone")}: {addressInfo?.phone}</Label>
+        <Label>{t("address.notes")}: {addressInfo?.notes}</Label>
       </CardContent>
       <div className="p-3 flex justify-between">
         <Button
@@ -37,19 +39,19 @@ const AddressCard = ({
           variant="submit"
           onClick={() => handleEditAddress(addressInfo)}
         >
-          Edit
+         {t("btn.edit")}
         </Button>
         <Button
           className="w-1/3 mx-auto"
           variant="submit"
           onClick={() => handleDeleteAddress(addressInfo)}
         >
-          Delete
+          {t("btn.delete")}
         </Button>
       </div>
       <CardFooter>
         <Button className="w-full" variant="submit">
-          Select
+          {t("btn.select")}
         </Button>
       </CardFooter>
     </Card>

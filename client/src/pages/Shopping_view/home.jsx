@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import ShoppingProductTile from "@/components/Shopping_components/product-tile";
 import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 import { useTranslation } from "react-i18next";
+import Slider from "./Slider";
 
 const categoriesWithIcon = [
   { id: "soundbox", labelKey: "nav.soundbox", icon: Speaker },
@@ -44,11 +45,9 @@ const brandsWithIcon = [
   { id: "others", label: "Others", icon: Laptop },
 ];
 const ShoppingHome = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts,
   );
-  const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
@@ -73,7 +72,6 @@ const ShoppingHome = () => {
   };
 
   const handleAddtoCart = (getCurrentProductId) => {
-   
     dispatch(
       addToCart({
         userId: user?.id,
@@ -95,14 +93,6 @@ const ShoppingHome = () => {
   }, [productDetails]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [featureImageList]);
-
-  useEffect(() => {
     dispatch(
       fetchAllFilteredProducts({
         filterParams: {},
@@ -119,48 +109,7 @@ const ShoppingHome = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full aspect-video md:aspect-21/9 overflow-hidden bg-white">
-        {featureImageList && featureImageList.length > 0
-          ? featureImageList.map((slide, index) => (
-              <img
-                src={slide?.image}
-                key={index}
-                alt=""
-                className={`${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                } absolute inset-0 w-full h-full object-contain lg:object-cover object-center transition-opacity duration-1000`}
-              />
-            ))
-          : null}
-
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() =>
-            setCurrentSlide(
-              (prevSlide) =>
-                (prevSlide - 1 + featureImageList.length) %
-                featureImageList.length,
-            )
-          }
-          className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/80"
-        >
-          <ChevronLeftIcon className="w-4 h-4" />
-        </Button>
-
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() =>
-            setCurrentSlide(
-              (prevSlide) => (prevSlide + 1) % featureImageList.length,
-            )
-          }
-          className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/80"
-        >
-          <ChevronRightIcon className="w-4 h-4" />
-        </Button>
-      </div>
+      <Slider />
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
@@ -226,7 +175,7 @@ const ShoppingHome = () => {
           <div className="py-5">
             <Button
               variant="submit"
-              className="w-1/4 mx-auto block"
+              className="w-1/2 lg:w-1/4 mx-auto block"
               onClick={() => navigate("/shop/listing")}
             >
               {t("btn.seeAll")}

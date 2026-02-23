@@ -4,10 +4,7 @@ import { brandOptionsMap, categoryOptionsMap } from "@/config";
 import { Badge } from "../ui/badge";
 import { useTranslation } from "react-i18next";
 
-const ShoppingProductTile = ({
-  product,
-  handleGetProductDetails,
-}) => {
+const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
   const { t } = useTranslation();
   return (
     <Card className="w-full max-w-sm mx-auto overflow-hidden p-0">
@@ -16,7 +13,7 @@ const ShoppingProductTile = ({
           <img
             src={product?.mainImage}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg"
+            className="w-full h-[300px] object-contain lg:object-cover rounded-t-lg"
           />
           {product?.totalStock === 0 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
@@ -60,7 +57,9 @@ const ShoppingProductTile = ({
           </div>
         </CardContent>
         <CardFooter className="flex justify-center items-center my-5">
-          <Button className="w-3/4 mx-auto p-5" variant="submit">{t("btn.seeDetail")}</Button>
+          <Button className="w-3/4 mx-auto p-5 bg-green-700 hover:bg-green-600" variant="submit">
+            {t("btn.order")}
+          </Button>
         </CardFooter>
       </div>
     </Card>

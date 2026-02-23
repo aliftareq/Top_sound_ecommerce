@@ -68,7 +68,7 @@ function AdminFeatures() {
               <div className="relative">
                 <img
                   src={featureImgItem.image}
-                  className="w-full h-[300px] object-cover rounded-t-lg"
+                  className="w-full h-[300px]  object-contain lg:object-cover rounded-t-lg"
                 />
 
                 <button
