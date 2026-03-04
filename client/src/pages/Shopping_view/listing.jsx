@@ -21,6 +21,7 @@ import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import Slider from "./Slider";
+import { getFeatureImages } from "@/store/common-slice";
 
 const createSearchParamsHelper = (filterParams) => {
   const queryParams = [];
@@ -40,6 +41,7 @@ const ShoppingListing = () => {
   //states & hooks
   const dispatch = useDispatch();
   const { productList } = useSelector((state) => state.shopProducts);
+  const { featureImageList } = useSelector((state) => state.commonFeature);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
 
@@ -130,6 +132,12 @@ const ShoppingListing = () => {
       setSearchParams(new URLSearchParams(createQueryString));
     }
   }, [filters]);
+
+  useEffect(() => {
+    if (!featureImageList || featureImageList.length === 0) {
+      dispatch(getFeatureImages());
+    }
+  }, [dispatch, featureImageList?.length]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">

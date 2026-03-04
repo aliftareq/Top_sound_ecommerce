@@ -71,43 +71,46 @@ const Slider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
-  const len = featureImageList?.length || 0;
-  const canSlide = len > 0;
+  const slides = featureImageList || [];
+  const len = slides.length;
 
-  // reset slide if list changes
+  // reset to first slide when images load
   useEffect(() => {
-    setCurrentSlide(0);
+    if (len > 0) setCurrentSlide(0);
   }, [len]);
 
-  // autoplay only if data exists
+  // autoplay only if slides exist
   useEffect(() => {
-    if (!canSlide) return;
+    if (len === 0) return;
 
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % len);
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [canSlide, len]);
+  }, [len]);
+
+  // optional placeholder (keeps space)
+  if (len === 0) {
+    return <div className="relative w-full aspect-video md:aspect-21/9 bg-white" />;
+  }
 
   return (
     <div className="relative w-full aspect-video md:aspect-21/9 overflow-hidden bg-white">
-      {canSlide &&
-        featureImageList.map((slide, index) => (
-          <img
-            src={slide?.image}
-            key={index}
-            alt=""
-            className={`${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            } absolute inset-0 w-full h-full object-contain lg:object-cover object-center transition-opacity duration-1000`}
-          />
-        ))}
+      {slides.map((slide, index) => (
+        <img
+          src={slide?.image}
+          key={index}
+          alt=""
+          className={`${
+            index === currentSlide ? "opacity-100" : "opacity-0"
+          } absolute inset-0 w-full h-full object-contain lg:object-cover object-center transition-opacity duration-1000`}
+        />
+      ))}
 
       <Button
         variant="outline"
         size="icon"
-        disabled={!canSlide}
         onClick={() => setCurrentSlide((prev) => (prev - 1 + len) % len)}
         className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/80"
       >
@@ -117,7 +120,6 @@ const Slider = () => {
       <Button
         variant="outline"
         size="icon"
-        disabled={!canSlide}
         onClick={() => setCurrentSlide((prev) => (prev + 1) % len)}
         className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/80"
       >
