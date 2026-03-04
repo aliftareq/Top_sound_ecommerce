@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/set-state-in-effect */
-import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 import ShoppingProductTile from "@/components/Shopping_components/product-tile";
 import { Input } from "@/components/ui/input";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -108,11 +107,6 @@ const SearchProducts = () => {
           />
         ))}
       </div>
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
     </div>
   );
 };

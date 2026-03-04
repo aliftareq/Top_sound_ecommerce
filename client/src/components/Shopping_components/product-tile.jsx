@@ -3,12 +3,14 @@ import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 import { Badge } from "../ui/badge";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
+const ShoppingProductTile = ({ product}) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <Card className="w-full max-w-sm mx-auto overflow-hidden p-0">
-      <div onClick={() => handleGetProductDetails(product?._id)}>
+      <div onClick={() => navigate(`/shop/products/${product?._id}`)}>
         <div className="relative">
           <img
             src={product?.mainImage}

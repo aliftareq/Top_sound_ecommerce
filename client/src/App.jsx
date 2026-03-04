@@ -24,6 +24,7 @@ import PaymentSuccessPage from "./pages/Shopping_view/payment-success";
 import SearchProducts from "./pages/Shopping_view/search";
 import { useLocation } from "react-router-dom";
 import ShoppingOrderDetailsPage from "./pages/Shopping_view/OrderDetails";
+import ProductDetailsPage from "./pages/Shopping_view/product-details";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -53,6 +54,10 @@ function App() {
           <Route
             path="/shop/orderDetails"
             element={<ShoppingOrderDetailsPage />}
+          />
+          <Route
+            path="/shop/products/:productId"
+            element={<ProductDetailsPage />}
           />
         </Route>
         {/* <Route path="/shop/listing" element={<ShoppingListing />} /> */}

@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import { useEffect, useState } from "react";
 import { ArrowUpDownIcon } from "lucide-react";
 import ProductFilter from "@/components/Shopping_components/filter";
@@ -19,7 +18,6 @@ import {
   fetchProductDetails,
 } from "@/store/shop/products-slice";
 import { useSearchParams } from "react-router-dom";
-import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 import { toast } from "sonner";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import Slider from "./Slider";
@@ -41,16 +39,13 @@ const createSearchParamsHelper = (filterParams) => {
 const ShoppingListing = () => {
   //states & hooks
   const dispatch = useDispatch();
-  const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts,
-  );
+  const { productList } = useSelector((state) => state.shopProducts);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
 
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const categorySearchParam = searchParams.get("category");
 
@@ -136,10 +131,6 @@ const ShoppingListing = () => {
     }
   }, [filters]);
 
-  useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
-  }, [productDetails]);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filters={filters} handleFilter={handleFilter} />
@@ -188,7 +179,7 @@ const ShoppingListing = () => {
           </div>
         </div>
         <div className="mt-2">
-          <Slider/>
+          <Slider />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {productList && productList.length > 0
@@ -202,11 +193,6 @@ const ShoppingListing = () => {
             : null}
         </div>
       </div>
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
     </div>
   );
 };

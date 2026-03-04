@@ -7,13 +7,14 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import { Toaster } from "sonner";
 import "./i18n";
-
+import MetaPixelTracker from "./MetaPixelTracker";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
+    <MetaPixelTracker />
     <Provider store={store}>
       <App />
       <Toaster richColors position="top-center" />
     </Provider>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

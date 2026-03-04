@@ -13,7 +13,7 @@ import {
   Watch,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllFilteredProducts,
@@ -24,7 +24,6 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { getFeatureImages } from "@/store/common-slice";
 import { toast } from "sonner";
 import ShoppingProductTile from "@/components/Shopping_components/product-tile";
-import ProductDetailsDialog from "@/components/Shopping_components/product-details";
 import { useTranslation } from "react-i18next";
 import Slider from "./Slider";
 
@@ -45,11 +44,9 @@ const brandsWithIcon = [
   { id: "others", label: "Others", icon: Laptop },
 ];
 const ShoppingHome = () => {
-  const { productList, productDetails } = useSelector(
+  const { productList } = useSelector(
     (state) => state.shopProducts,
   );
-
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -85,12 +82,6 @@ const ShoppingHome = () => {
       }
     });
   };
-
-  useEffect(() => {
-    if (productDetails !== null) {
-      setOpenDetailsDialog(true);
-    }
-  }, [productDetails]);
 
   useEffect(() => {
     dispatch(
@@ -183,11 +174,6 @@ const ShoppingHome = () => {
           </div>
         </div>
       </section>
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
     </div>
   );
 };

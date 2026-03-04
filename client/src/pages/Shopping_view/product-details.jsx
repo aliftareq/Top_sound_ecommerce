@@ -1,42 +1,66 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent } from "../ui/dialog";
-import { Separator } from "../ui/separator";
-import { Textarea } from "../ui/textarea";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+
+import StarRatingComponent from "@/components/Common_components/star-rating";
+
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { FaWhatsapp } from "react-icons/fa";
+
 import {
   addToCart,
   fetchCartItems,
   addGuestToCart,
 } from "@/store/shop/cart-slice";
-import { setProductDetails } from "@/store/shop/products-slice";
-import { Label } from "../ui/label";
-import StarRatingComponent from "../Common_components/star-rating";
-import { useEffect, useMemo, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  fetchProductDetails,
+  setProductDetails,
+} from "@/store/shop/products-slice";
 
-const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
+const ProductDetailsPage = () => {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
-
-  // ✅ selected image shown as main (default: mainImage)
   const [selectedImage, setSelectedImage] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { productId } = useParams();
+  const { t } = useTranslation();
+
   const { user } = useSelector((state) => state.auth);
   const { cartItems, guestCart } = useSelector((state) => state.shopCart);
   const { orders } = useSelector((state) => state.shopOrder);
   const { reviews } = useSelector((state) => state.shopReview);
 
-  const navigate = useNavigate();
-  const { t } = useTranslation();
+  // ✅ from your slice
+  const { productDetails, isLoading } = useSelector(
+    (state) => state.shopProducts,
+  );
 
-  // Build a safe gallery list: mainImage first + images array (no duplicates)
+  // ✅ Load product details by route param
+  useEffect(() => {
+    if (productId) dispatch(fetchProductDetails(productId));
+
+    // cleanup so old data doesn't flash when switching product
+    return () => {
+      dispatch(setProductDetails());
+    };
+  }, [productId]);
+
+  // ✅ Load reviews after product loaded
+  useEffect(() => {
+    if (productDetails?._id) dispatch(getReviews(productDetails._id));
+  }, [productDetails?._id]);
+
+  // ✅ Gallery images
   const galleryImages = useMemo(() => {
     const main = productDetails?.mainImage ? [productDetails.mainImage] : [];
     const extra = Array.isArray(productDetails?.images)
@@ -46,28 +70,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     return Array.from(new Set(all));
   }, [productDetails]);
 
-  // when product changes, reset selected image to main image
+  // ✅ set main image when product changes
   useEffect(() => {
     setSelectedImage(productDetails?.mainImage || "");
   }, [productDetails]);
 
-  const handleRatingChange = (getRating) => {
-    setRating(getRating);
-  };
+  const handleRatingChange = (getRating) => setRating(getRating);
 
-  const handleDialogClose = () => {
-    setOpen(false);
-    dispatch(setProductDetails());
-    setRating(0);
-    setReviewMsg("");
-    setSelectedImage(""); // reset
-  };
-
-  /**
-   * ✅ Reusable add-to-cart handler
-   * - For Add to Cart button: call normally
-   * - For Order button: call with { redirectToCheckout: true } to close dialog + navigate
-   */
   const handleAddToCart = async (
     getCurrentProductId,
     getTotalStock,
@@ -75,7 +84,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   ) => {
     const isLoggedIn = Boolean(user?.id);
 
-    // ✅ use correct cart for stock-check
     const currentCartItems = isLoggedIn
       ? cartItems?.items || []
       : guestCart?.items || [];
@@ -92,23 +100,18 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
       }
     }
 
-    // =========================
-    // ✅ GUEST: localStorage + redux
-    // =========================
+    // ✅ GUEST
     if (!isLoggedIn) {
       dispatch(addGuestToCart({ productId: getCurrentProductId, quantity: 1 }));
       toast.success("Product is added to cart successfully");
 
       if (options?.redirectToCheckout) {
-        handleDialogClose();
         navigate("/shop/checkout");
       }
       return;
     }
 
-    // =========================
-    // ✅ LOGGED-IN: backend + redux
-    // =========================
+    // ✅ LOGGED-IN
     const result = await dispatch(
       addToCart({
         userId: user.id,
@@ -122,7 +125,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
       toast.success("Product is added to cart successfully");
 
       if (options?.redirectToCheckout) {
-        handleDialogClose();
         navigate("/shop/checkout");
       }
     }
@@ -138,13 +140,11 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   };
 
   const handleAddReview = () => {
-    // 🔒 Must be logged in
     if (!user?.id) {
       toast.error("Please login to add a review");
       return;
     }
 
-    // 🔒 Must purchase product first
     if (!hasUserPurchasedProduct()) {
       toast.error("You can only review products you have purchased.");
       return;
@@ -170,21 +170,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     });
   };
 
-  useEffect(() => {
-    if (productDetails !== null) dispatch(getReviews(productDetails?._id));
-  }, [productDetails]);
-
   const averageReview =
     reviews && reviews.length > 0
       ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
         reviews.length
       : 0;
 
-  // =========================
-  // ✅ WhatsApp (NEW)
-  // - Button floats on main image bottom-right
-  // - Sends title + price + product link
-  // =========================
+  // ✅ WhatsApp helpers
   const getDisplayPrice = () => {
     const offer = Number(productDetails?.offerPrice || 0);
     const price = Number(productDetails?.price || 0);
@@ -192,8 +184,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   };
 
   const buildProductLink = () => {
-    // If you already store product slug/url, use it here instead.
-    // This is a safe default.
     return `${window.location.origin}/shop/products/${productDetails?._id}`;
   };
 
@@ -201,7 +191,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const title = productDetails?.title || "Product";
     const price = getDisplayPrice();
     const link = buildProductLink();
-
     return `Hi! I want to order:\n${title}\nPrice: ৳${price}\nLink: ${link}`;
   };
 
@@ -209,41 +198,47 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     buildWhatsAppMessage(),
   )}`;
 
+  // ✅ Basic loading / empty states
+  if (isLoading && !productDetails)
+    return <div className="p-6">Loading...</div>;
+  if (!productDetails) return <div className="p-6">Product not found</div>;
+
   return (
-    <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw] max-h-[90vh] overflow-y-auto">
-        {/* LEFT: Main image + gallery thumbnails */}
+    <div className="max-w-6xl mx-auto p-4 md:p-10">
+      {/* optional back */}
+      <div className="mb-4">
+        <Button variant="outline" onClick={() => navigate(-1)}>
+          ← Back
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* LEFT: Main image + thumbnails */}
         <div className="space-y-4">
           <div className="relative overflow-hidden rounded-lg">
             <img
               src={selectedImage || productDetails?.mainImage}
               alt={productDetails?.title}
-              width={600}
-              height={600}
               className="aspect-square w-full object-cover"
             />
 
-            {/* ✅ WhatsApp Floating Button (NEW) */}
+            {/* WhatsApp Floating Button */}
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               className="absolute bottom-3 right-3 z-50
-                   w-14 h-14 rounded-full bg-green-500 hover:bg-green-600
-                   flex items-center justify-center shadow-xl
-                   transition-transform duration-300 hover:scale-110"
+                w-14 h-14 rounded-full bg-green-500 hover:bg-green-600
+                flex items-center justify-center shadow-xl
+                transition-transform duration-300 hover:scale-110"
               aria-label="Order via WhatsApp"
               title="Order via WhatsApp"
             >
-              {/* wave */}
               <span className="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-40 animate-ping"></span>
-
-              {/* icon */}
               <FaWhatsapp className="relative text-white" size={28} />
             </a>
           </div>
 
-          {/* ✅ Gallery thumbnails under main image */}
           {galleryImages.length > 1 ? (
             <div className="flex gap-2 flex-wrap">
               {galleryImages.map((imgUrl, idx) => {
@@ -273,14 +268,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         </div>
 
         {/* RIGHT: Details */}
-        <div className="">
-          <div>
-            <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-            <div className="text-black text-sm md:text-xl my-2 space-y-1">
-              {productDetails?.description?.split(";").map((item, index) => (
-                <p key={index}>{item.trim()}</p>
-              ))}
-            </div>
+        <div>
+          <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
+
+          <div className="text-black text-sm md:text-xl my-2 space-y-1">
+            {productDetails?.description?.split(";").map((item, index) => (
+              <p key={index}>{item.trim()}</p>
+            ))}
           </div>
 
           <div className="flex items-center justify-between">
@@ -299,14 +293,11 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           </div>
 
           <div className="flex items-center gap-2 mt-2">
-            <div className="flex items-center gap-0.5">
-              <StarRatingComponent rating={averageReview} />
-            </div>
+            <StarRatingComponent rating={averageReview} />
             <span className="text-black">({averageReview.toFixed(2)})</span>
           </div>
 
           <div className="flex gap-5 mt-5 mb-5">
-            {/* ✅ Order button: add to cart + close dialog + redirect */}
             <Button
               onClick={() =>
                 handleAddToCart(
@@ -324,7 +315,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
               {t("btn.order")}
             </Button>
 
-            {/* ✅ Add to cart button: only add */}
             {productDetails?.totalStock === 0 ? (
               <Button
                 variant="submit"
@@ -350,7 +340,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
 
           <Separator />
 
-          <div className="max-h-[300px] overflow-auto">
+          <div className="max-h-[300px] overflow-auto mt-6">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
 
             <div className="grid gap-6">
@@ -410,9 +400,9 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 
-export default ProductDetailsDialog;
+export default ProductDetailsPage;
