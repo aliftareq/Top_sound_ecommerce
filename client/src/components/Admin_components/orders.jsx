@@ -52,14 +52,26 @@ const getOrderBadgeClass = (status) => {
 const getCourierBadgeClass = (deliveryStatus) => {
   switch (deliveryStatus) {
     case "delivered":
+    case "partial_delivered":
       return "bg-green-600";
+
     case "pending":
     case "in_review":
+    case "delivered_approval_pending":
+    case "partial_delivered_approval_pending":
+    case "unknown_approval_pending":
       return "bg-yellow-500";
+
     case "hold":
       return "bg-orange-500";
+
     case "cancelled":
+    case "cancelled_approval_pending":
       return "bg-red-600";
+
+    case "unknown":
+      return "bg-slate-500";
+
     default:
       return "bg-slate-700";
   }
@@ -190,8 +202,8 @@ const AdminOrdersView = () => {
   }, [dispatch]);
 
   return (
-   <div className="min-w-0">
-      <Card >
+    <div className="min-w-0">
+      <Card>
         <CardHeader className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between gap-3">
             <div className="flex flex-col">

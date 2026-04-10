@@ -363,12 +363,13 @@ const syncSteadfastStatusForOrder = async (req, res) => {
 
     const order = await Order.findById(id);
     if (!order) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Order not found!" });
+      return res.status(404).json({
+        success: false,
+        message: "Order not found!",
+      });
     }
 
-    if (!order?.steadfast?.invoice) {
+    if (!order.steadfast || !order.steadfast.invoice) {
       return res.status(400).json({
         success: false,
         message: "This order has no Steadfast invoice yet.",
@@ -376,8 +377,9 @@ const syncSteadfastStatusForOrder = async (req, res) => {
     }
 
     const statusRes = await steadfastStatusByInvoice(order.steadfast.invoice);
+    console.log("Steadfast status response:", statusRes);
 
-    if (statusRes?.status !== 200) {
+    if (!statusRes || statusRes.status !== 200) {
       return res.status(400).json({
         success: false,
         message: "Steadfast status fetch failed!",
@@ -387,18 +389,39 @@ const syncSteadfastStatusForOrder = async (req, res) => {
 
     const deliveryStatus = statusRes.delivery_status;
 
+    if (!order.steadfast) {
+      order.steadfast = {};
+    }
+
     order.steadfast.deliveryStatus = deliveryStatus;
     order.steadfast.lastSyncAt = new Date();
     order.orderUpdateDate = new Date();
 
-    // Optional mapping courier status -> your orderStatus
-    if (deliveryStatus === "delivered") order.orderStatus = "delivered";
-    if (deliveryStatus === "cancelled") order.orderStatus = "cancelled";
-    if (deliveryStatus === "hold") order.orderStatus = "hold";
+    if (
+      deliveryStatus === "delivered" ||
+      deliveryStatus === "partial_delivered"
+    ) {
+      order.orderStatus = "delivered";
+    } else if (
+      deliveryStatus === "cancelled" ||
+      deliveryStatus === "cancelled_approval_pending"
+    ) {
+      order.orderStatus = "cancelled";
+    } else if (deliveryStatus === "hold") {
+      order.orderStatus = "hold";
+    } else if (
+      deliveryStatus === "in_review" ||
+      deliveryStatus === "pending" ||
+      deliveryStatus === "delivered_approval_pending" ||
+      deliveryStatus === "partial_delivered_approval_pending" ||
+      deliveryStatus === "unknown_approval_pending"
+    ) {
+      order.orderStatus = "shipped";
+    }
 
     await order.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Steadfast status synced!",
       data: {
@@ -409,10 +432,11 @@ const syncSteadfastStatusForOrder = async (req, res) => {
       },
     });
   } catch (e) {
-    console.log(e);
-    res
-      .status(500)
-      .json({ success: false, message: e.message || "Some error occured!" });
+    console.log("SYNC ERROR:", e.response?.data || e.message || e);
+    return res.status(500).json({
+      success: false,
+      message: e.response?.data?.message || e.message || "Some error occurred!",
+    });
   }
 };
 

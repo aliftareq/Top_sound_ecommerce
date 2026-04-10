@@ -3,7 +3,8 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "baseUrl": ".",
+    "ignoreDeprecations": "6.0", // This silences the deprecation warning
+    "baseUrl": ".", // Optional if you're using paths
     "paths": {
       "@/*": ["./*"]
     }

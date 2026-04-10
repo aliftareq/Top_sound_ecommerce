@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-
 import StarRatingComponent from "@/components/Common_components/star-rating";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { FaWhatsapp } from "react-icons/fa";
-
+import { trackViewContent,
+  trackAddToCart,
+  trackInitiateCheckout } from "@/utils/metaEvents";
 import {
   addToCart,
   fetchCartItems,
@@ -60,6 +60,13 @@ const ProductDetailsPage = () => {
     if (productDetails?._id) dispatch(getReviews(productDetails._id));
   }, [productDetails?._id]);
 
+  // ✅ Track product view for Meta Pixel
+  useEffect(() => {
+    if (productDetails?._id) {
+      trackViewContent(productDetails);
+    }
+  }, [productDetails?._id]);
+
   // ✅ Gallery images
   const galleryImages = useMemo(() => {
     const main = productDetails?.mainImage ? [productDetails.mainImage] : [];
@@ -103,9 +110,11 @@ const ProductDetailsPage = () => {
     // ✅ GUEST
     if (!isLoggedIn) {
       dispatch(addGuestToCart({ productId: getCurrentProductId, quantity: 1 }));
+      trackAddToCart(productDetails);
       toast.success("Product is added to cart successfully");
 
       if (options?.redirectToCheckout) {
+        trackInitiateCheckout(productDetails);
         navigate("/shop/checkout");
       }
       return;
@@ -122,9 +131,11 @@ const ProductDetailsPage = () => {
 
     if (result?.payload?.success) {
       await dispatch(fetchCartItems(user.id));
+      trackAddToCart(productDetails);
       toast.success("Product is added to cart successfully");
 
       if (options?.redirectToCheckout) {
+        trackInitiateCheckout(productDetails);
         navigate("/shop/checkout");
       }
     }

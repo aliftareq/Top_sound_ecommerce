@@ -1,22 +1,42 @@
 import Product from "#models/Product";
-import { imageUploadUtil } from "../../helpers/cloudinary.js";
+import { imageUploadUtil } from "../../helpers/imagebb.js";
 
-//upload images
 const handleImageUpload = async (req, res) => {
   try {
-    const b64 = Buffer.from(req.file.buffer).toString("base64");
-    const url = "data:" + req.file.mimetype + ";base64," + b64;
-    const result = await imageUploadUtil(url);
+    const file = req.file;
 
-    res.json({
+    if (!file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file provided",
+      });
+    }
+
+    const b64 = file.buffer.toString("base64");
+
+    const result = await imageUploadUtil(b64, file.originalname);
+
+    return res.status(200).json({
       success: true,
-      result,
+      message: "Image uploaded successfully",
+      result: {
+        id: result.id,
+        title: result.title,
+        url: result.url,
+        display_url: result.display_url,
+        delete_url: result.delete_url,
+        width: result.width,
+        height: result.height,
+        size: result.size,
+      },
     });
   } catch (error) {
-    console.log(error);
-    res.json({
+    console.error("Error uploading image:", error);
+
+    return res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: "Image upload failed",
+      error: error.message,
     });
   }
 };
@@ -32,7 +52,7 @@ const addProduct = async (req, res) => {
       category,
       brand,
       price,
-      offerPrice,   
+      offerPrice,
       totalStock,
       averageReview,
     } = req.body;
@@ -64,7 +84,6 @@ const addProduct = async (req, res) => {
     });
   }
 };
-
 
 //fetch all products
 const fetchAllProducts = async (req, res) => {
@@ -117,13 +136,11 @@ const editProduct = async (req, res) => {
     findProduct.offerPrice =
       offerPrice === "" ? 0 : offerPrice || findProduct.offerPrice;
     findProduct.totalStock = totalStock || findProduct.totalStock;
-    findProduct.averageReview =
-      averageReview || findProduct.averageReview;
+    findProduct.averageReview = averageReview || findProduct.averageReview;
 
     // Images (safe)
     findProduct.mainImage = mainImage || findProduct.mainImage;
-    findProduct.images =
-      images !== undefined ? images : findProduct.images;
+    findProduct.images = images !== undefined ? images : findProduct.images;
 
     await findProduct.save();
 
@@ -139,7 +156,6 @@ const editProduct = async (req, res) => {
     });
   }
 };
-
 
 //delete a product
 const deleteProduct = async (req, res) => {
