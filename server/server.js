@@ -32,6 +32,7 @@ const allowedOrigins = [
   "https://topsoundbd.com",
   "https://www.topsoundbd.com",
   "https://api.topsoundbd.com",
+  "https://api.topsoundbdserver.com",
 ];
 
 app.use(
