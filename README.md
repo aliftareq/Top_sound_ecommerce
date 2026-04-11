@@ -56,7 +56,7 @@
 - Node.js
 - Express.js
 - MongoDB
-- Cloudinary (for photo upload)
+- ImageBB (for photo upload)
 
 ### Authentication & Security
 
