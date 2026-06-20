@@ -4,6 +4,9 @@
 
 - **Live Site**: <a href="https://topsoundbd.com/" target="_blank">https://topsoundbd.com/</a>
 - **Server API**: <a href="https://api.topsoundbd.com/" target="_blank">https://api.topsoundbd.com/</a>
+- demo admin credential : 
+  Phone Number: 01834910647
+  Password : 123456
 
 ---
 
